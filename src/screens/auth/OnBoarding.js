@@ -20,14 +20,14 @@ const OnBoarding = ({ navigation }) => {
         buttonStyle={Styles.formButton}
         disabledStyle={Styles.formDisabledButton}
         titleStyle={{ fontSize: scaleH(20) }}
-        onPress={() => navigation.navigate('SignUp')}
+        onPress={() => navigation.navigate('Main')}
         title="Get Started"
       />
       <FormButton
         buttonStyle={Styles.formButton}
         disabledStyle={Styles.formDisabledButton}
         titleStyle={{ fontSize: scaleH(20) }}
-        onPress={() => navigation.navigate('Login')}
+        onPress={() => navigation.navigate('Main')}
         title="Login"
       />
     </Container>

@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import AuthLoading from 'screens/AuthLoading';
 import Login from 'screens/auth/Login';
 import SignUp from 'screens/auth/Signup';
 import OnBoarding from 'screens/auth/OnBoarding';
-import Home from 'screens/Home';
+import Home from 'screens/private/Home';
+import MainTabNavigator from 'navigators/BottomTab';
 import { AuthActions } from 'reduxs/actions';
 
 const AuthStack = createStackNavigator();
@@ -64,6 +66,32 @@ const AppNavigator = () => {
     bootstrapAsync();
   }, [dispatch, user]);
 
+  // return (
+  //   <AppStack.Navigator>
+  //     {initialLoading ? (
+  //       <AppStack.Screen
+  //         name="AuthLoading"
+  //         component={AuthLoading}
+  //         options={{ headerShown: false }}
+  //       />
+  //     ) : !user ? (
+  //       <AppStack.Screen
+  //         name="Auth"
+  //         component={AuthNavigator}
+  //         options={{
+  //           headerShown: false,
+  //         }}
+  //       />
+  //     ) : (
+  //       <AppStack.Screen
+  //         name="Main"
+  //         component={MainTabNavigator}
+  //         options={{ headerShown: false }}
+  //       />
+  //     )}
+  //   </AppStack.Navigator>
+  // );
+
   return (
     <AppStack.Navigator>
       {initialLoading ? (
@@ -72,20 +100,21 @@ const AppNavigator = () => {
           component={AuthLoading}
           options={{ headerShown: false }}
         />
-      ) : !user ? (
-        <AppStack.Screen
-          name="Auth"
-          component={AuthNavigator}
-          options={{
-            headerShown: false,
-          }}
-        />
       ) : (
-        <AppStack.Screen
-          name="Main"
-          component={MainNavigator}
-          options={{ headerShown: false }}
-        />
+        <>
+          <AppStack.Screen
+            name="Auth"
+            component={AuthNavigator}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <AppStack.Screen
+            name="Main"
+            component={MainTabNavigator}
+            options={{ headerShown: false }}
+          />
+        </>
       )}
     </AppStack.Navigator>
   );
