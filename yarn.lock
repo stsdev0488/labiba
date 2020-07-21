@@ -6532,6 +6532,11 @@ saxes@^5.0.0:
   dependencies:
     xmlchars "^2.2.0"
 
+scandit-react-native@^5.16.0:
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/scandit-react-native/-/scandit-react-native-5.16.0.tgz#a100b633b238ac00695fb0666292307806cab6b1"
+  integrity sha512-pgV+zfh3WDRqY4n7zYFulh0uciKCpyEQeyoOdkLEBkT/ispRzDL+LDChqVmzGo4Rt+XkkzgOVCAW+V1qXmEXww==
+
 scheduler@0.19.1, scheduler@^0.19.1:
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"

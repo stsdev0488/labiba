@@ -72,9 +72,11 @@ const tabBarIcon = (name) => ({ focused, color, size }) => (
 const MainTabNavigator = () => {
   return (
     <MainTab.Navigator
+      initialRouteName="ScanTab"
       tabBarOptions={{
         activeTintColor: '#29C172',
         inactiveTintColor: '#565658',
+        showLabel: true,
       }}
       tabBar={(props) => <BottomFabBar color="white" {...props} />}
     >
