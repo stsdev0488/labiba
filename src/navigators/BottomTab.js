@@ -8,6 +8,7 @@ import History from 'screens/private/History';
 import Scan from 'screens/private/Scan';
 import Profile from 'screens/private/Profile';
 import Setting from 'screens/private/Setting';
+import { Colors } from 'config';
 
 const HistoryStack = createStackNavigator();
 const HistoryNavigator = () => (
@@ -74,8 +75,8 @@ const MainTabNavigator = () => {
     <MainTab.Navigator
       initialRouteName="ScanTab"
       tabBarOptions={{
-        activeTintColor: '#29C172',
-        inactiveTintColor: '#565658',
+        activeTintColor: Colors.primary,
+        inactiveTintColor: Colors.label,
         showLabel: true,
       }}
       tabBar={(props) => <BottomFabBar color="white" {...props} />}

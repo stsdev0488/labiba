@@ -8,6 +8,8 @@ target 'Labiba' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'scandit-react-native', :path => '../node_modules/scandit-react-native'
+
   target 'LabibaTests' do
     inherit! :complete
     # Pods for testing

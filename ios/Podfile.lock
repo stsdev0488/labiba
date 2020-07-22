@@ -312,6 +312,8 @@ PODS:
     - React
   - RNVectorIcons (7.0.0):
     - React
+  - scandit-react-native (5.16.0):
+    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -371,6 +373,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - scandit-react-native (from `../node_modules/scandit-react-native`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -455,6 +458,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  scandit-react-native:
+    :path: "../node_modules/scandit-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -503,9 +508,10 @@ SPEC CHECKSUMS:
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
+  scandit-react-native: d84e314d1875fe861ec900f945a236941a32163c
   Yoga: d5bd05a2b6b94c52323745c2c2b64557c8c66f64
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 5eaad95dab1940ff20f5287f5e02be941e0411c0
+PODFILE CHECKSUM: 0cca821347d385e71e4be68948f46e478b684fab
 
 COCOAPODS: 1.9.2

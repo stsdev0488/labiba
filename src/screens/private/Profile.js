@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text } from 'react-native';
-import SafeAreaContainer from 'components/SafeAreaContainer';
+import Container from 'components/Container';
 
 const Profile = () => {
   return (
-    <SafeAreaContainer>
+    <Container>
       <Text>Profile</Text>
-    </SafeAreaContainer>
+    </Container>
   );
 };
 
