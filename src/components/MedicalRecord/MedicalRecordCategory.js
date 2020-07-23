@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Category = ({ selected, text, onPress }) => {
+const MedicalRecordCategory = ({ selected, text, onPress }) => {
   return (
     <TouchableOpacity
       style={[
@@ -42,14 +42,14 @@ const Category = ({ selected, text, onPress }) => {
   );
 };
 
-Category.defaultProps = {
+MedicalRecordCategory.defaultProps = {
   selected: false,
   text: null,
 };
 
-Category.propTypes = {
+MedicalRecordCategory.propTypes = {
   selected: PropTypes.bool,
   text: PropTypes.string,
 };
 
-export default Category;
+export default MedicalRecordCategory;

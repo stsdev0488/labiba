@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const HistoryItem = ({ data }) => {
+const MedicalRecordItem = ({ data }) => {
   return (
     <View style={styles.container}>
       <Image source={data.image} />
@@ -49,12 +49,12 @@ const HistoryItem = ({ data }) => {
   );
 };
 
-HistoryItem.defaultProps = {
+MedicalRecordItem.defaultProps = {
   data: {},
 };
 
-HistoryItem.propTypes = {
+MedicalRecordItem.propTypes = {
   data: PropTypes.objectOf(PropTypes.any),
 };
 
-export default HistoryItem;
+export default MedicalRecordItem;

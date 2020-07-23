@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 const AuthLoading = () => {
   return (
     <Container style={styles.container}>
-      <ActivityIndicator />
+      <ActivityIndicator color={Colors.lightLabel} />
     </Container>
   );
 };

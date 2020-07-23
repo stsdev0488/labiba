@@ -1,68 +1,64 @@
-import React, { useState } from 'react';
-import { FlatList, ScrollView, Text } from 'react-native';
-import { FlatGrid } from 'react-native-super-grid';
-import Header from 'components/Header/SearchHeader';
+import React from 'react';
+import { FlatList, Text } from 'react-native';
 import Container from 'components/Container';
-import Category from 'components/History/Category';
-import { scaleH, scaleW } from 'utils/scale';
+import Header from 'components/Header/Header';
+import FoodListItem from 'components/History/FoodListItem';
 import { Images } from 'config';
-import HistoryItem from 'components/History/HistoryItem';
+import { scaleW } from 'utils/scale';
 
-const categories = ['Health', 'Sport', 'Medical', 'Music', 'Food'];
-const items = [
+const data = [
   {
-    title: 'Fitbit Versa 2',
-    image: Images.FitbitVersa,
+    id: 1,
+    name: 'Quality Street Chocolates & Toffees',
+    category: 'Nestle',
+    score: 9.5,
+    amount: '350',
+    calory: '120',
+    time: '8 day ago',
+    image: Images.Food1,
   },
   {
-    title: 'Pedometer Fitness',
-    image: Images.Pedometer,
+    id: 2,
+    name: 'Quality Street Chocolates & Toffees',
+    category: 'Nestle',
+    score: 7.3,
+    amount: '350',
+    calory: '120',
+    time: '8 day ago',
+    image: Images.Food2,
   },
   {
-    title: 'S Health',
-    image: Images.SHealth,
+    id: 3,
+    name: 'Quality Street Chocolates & Toffees',
+    category: 'Nestle',
+    score: 4.2,
+    amount: '350',
+    calory: '120',
+    time: '8 day ago',
+    image: Images.Food3,
   },
   {
-    title: 'Healthy Food',
-    image: Images.HealthyFood,
+    id: 4,
+    name: 'Quality Street Chocolates & Toffees',
+    category: 'Nestle',
+    score: 2.1,
+    amount: '350',
+    calory: '120',
+    time: '8 day ago',
+    image: Images.Food4,
   },
 ];
 
 const History = ({ navigation }) => {
-  const [selectedCategory, setSelectedCategory] = useState(-1);
   return (
     <Container>
       <Header navigation={navigation} title="History" />
-      <ScrollView>
-        <ScrollView>
-          <FlatList
-            data={categories}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }) => (
-              <Category
-                key={index}
-                text={item}
-                selected={selectedCategory === index}
-                onPress={() => setSelectedCategory(index)}
-              />
-            )}
-            contentContainerStyle={{
-              paddingVertical: scaleH(10),
-              paddingHorizontal: scaleW(8),
-            }}
-          />
-          <FlatGrid
-            itemDimension={scaleW(160)}
-            spacing={scaleW(15)}
-            data={items}
-            renderItem={({ item, index }) => (
-              <HistoryItem key={index} data={item} />
-            )}
-            contentContainerStyle={{ paddingVertical: scaleH(15) }}
-          />
-        </ScrollView>
-      </ScrollView>
+      <FlatList
+        contentContainerStyle={{ padding: scaleW(10) }}
+        style={{ flex: 1 }}
+        data={data}
+        renderItem={({ item }) => <FoodListItem key={item.id} data={item} />}
+      />
     </Container>
   );
 };

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { Text } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import {
   BarcodePicker,
   ScanditModule,
@@ -9,12 +9,14 @@ import {
 import Container from 'components/Container';
 import { SCANDIT_KEY } from 'config';
 
-const Scan = () => {
-  ScanditModule.setAppKey(SCANDIT_KEY);
-  const scanSettings = new ScanSettings();
-  scanSettings.setSymbologyEnabled(Barcode.Symbology.EAN13, true);
-  scanSettings.setSymbologyEnabled(Barcode.Symbology.EAN8, true);
-  scanSettings.setSymbologyEnabled(Barcode.Symbology.UPCA, true);
+ScanditModule.setAppKey(SCANDIT_KEY);
+const scanSettings = new ScanSettings();
+scanSettings.setSymbologyEnabled(Barcode.Symbology.EAN13, true);
+scanSettings.setSymbologyEnabled(Barcode.Symbology.EAN8, true);
+scanSettings.setSymbologyEnabled(Barcode.Symbology.UPCA, true);
+
+const Scan = ({ navigation }) => {
+  const [, setFocused] = useState();
   const scanner = useRef(null);
 
   const handleScan = (session) => {
@@ -25,12 +27,13 @@ const Scan = () => {
     );
   };
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    console.log('useEffect');
-    if (scanner) {
+    if (scanner && isFocused) {
       scanner.current.startScanning();
     }
-  }, []);
+  }, [isFocused]);
 
   return (
     <Container>

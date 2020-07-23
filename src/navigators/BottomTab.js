@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomFabBar } from 'rn-wave-bottom-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Favorite from 'screens/private/Favorite';
+import MedicalRecord from 'screens/private/MedicalRecord';
 import History from 'screens/private/History';
 import Scan from 'screens/private/Scan';
 import Profile from 'screens/private/Profile';
@@ -77,6 +78,7 @@ const MainTabNavigator = () => {
       tabBarOptions={{
         activeTintColor: Colors.primary,
         inactiveTintColor: Colors.label,
+        inactiveBackgroundColor: 'red',
         showLabel: true,
       }}
       tabBar={(props) => <BottomFabBar color="white" {...props} />}
@@ -85,7 +87,7 @@ const MainTabNavigator = () => {
         name="HistoryTab"
         component={HistoryNavigator}
         options={{
-          tabBarLabel: 'History',
+          tabBarLabel: 'MedicalRecord',
           tabBarIcon: tabBarIcon('clockcircleo'),
         }}
       />

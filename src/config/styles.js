@@ -2,8 +2,8 @@ import * as Colors from './colors';
 import { scaleW, scaleH } from 'utils/scale';
 
 export const formButton = {
-  height: scaleH(36),
-  borderRadius: scaleH(36),
+  height: scaleH(50),
+  borderRadius: scaleH(50),
   color: Colors.white,
   backgroundColor: Colors.primary,
   fontSize: scaleH(18),
