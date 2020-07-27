@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { BottomFabBar } from 'rn-wave-bottom-bar';
+import AnimatedTabBar from 'curved-bottom-navigation-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Favorite from 'screens/private/Favorite';
 import MedicalRecord from 'screens/private/MedicalRecord';
@@ -9,7 +9,36 @@ import History from 'screens/private/History';
 import Scan from 'screens/private/Scan';
 import Profile from 'screens/private/Profile';
 import Setting from 'screens/private/Setting';
+import AnimatedIcon from 'components/AnimatedIcon';
 import { Colors } from 'config';
+
+const tabs = {
+  HistoryTab: {
+    icon: ({ progress }) => (
+      <AnimatedIcon name="clockcircleo" size={28} progress={progress} />
+    ),
+  },
+  FavoriteTab: {
+    icon: ({ progress }) => (
+      <AnimatedIcon name="staro" size={28} progress={progress} />
+    ),
+  },
+  ScanTab: {
+    icon: ({ progress }) => (
+      <AnimatedIcon name="scan1" size={28} progress={progress} />
+    ),
+  },
+  ProfileTab: {
+    icon: ({ progress }) => (
+      <AnimatedIcon name="user" size={28} progress={progress} />
+    ),
+  },
+  SettingTab: {
+    icon: ({ progress }) => (
+      <AnimatedIcon name="setting" size={28} progress={progress} />
+    ),
+  },
+};
 
 const HistoryStack = createStackNavigator();
 const HistoryNavigator = () => (
@@ -67,9 +96,6 @@ const SettingNavigator = () => (
 );
 
 const MainTab = createBottomTabNavigator();
-const tabBarIcon = (name) => ({ focused, color, size }) => (
-  <Icon name={name} size={28} color={color} />
-);
 
 const MainTabNavigator = () => {
   return (
@@ -78,39 +104,23 @@ const MainTabNavigator = () => {
       tabBarOptions={{
         activeTintColor: Colors.primary,
         inactiveTintColor: Colors.label,
-        inactiveBackgroundColor: 'red',
         showLabel: true,
       }}
-      tabBar={(props) => <BottomFabBar color="white" {...props} />}
+      tabBar={(props) => (
+        <AnimatedTabBar
+          barColor={Colors.white}
+          color={Colors.white}
+          dotColor={Colors.primary}
+          tabs={tabs}
+          {...props}
+        />
+      )}
     >
-      <MainTab.Screen
-        name="HistoryTab"
-        component={HistoryNavigator}
-        options={{
-          tabBarLabel: 'MedicalRecord',
-          tabBarIcon: tabBarIcon('clockcircleo'),
-        }}
-      />
-      <MainTab.Screen
-        name="FavoriteTab"
-        component={FavoriteNavigator}
-        options={{ tabBarLabel: 'Favorite', tabBarIcon: tabBarIcon('staro') }}
-      />
-      <MainTab.Screen
-        name="ScanTab"
-        component={ScanNavigator}
-        options={{ tabBarLabel: '', tabBarIcon: tabBarIcon('scan1') }}
-      />
-      <MainTab.Screen
-        name="ProfileTab"
-        component={ProfileNavigator}
-        options={{ tabBarLabel: 'Profile', tabBarIcon: tabBarIcon('user') }}
-      />
-      <MainTab.Screen
-        name="SettingTab"
-        component={SettingNavigator}
-        options={{ tabBarLabel: 'Setting', tabBarIcon: tabBarIcon('setting') }}
-      />
+      <MainTab.Screen name="HistoryTab" component={HistoryNavigator} />
+      <MainTab.Screen name="FavoriteTab" component={FavoriteNavigator} />
+      <MainTab.Screen name="ScanTab" component={ScanNavigator} />
+      <MainTab.Screen name="ProfileTab" component={ProfileNavigator} />
+      <MainTab.Screen name="SettingTab" component={SettingNavigator} />
     </MainTab.Navigator>
   );
 };

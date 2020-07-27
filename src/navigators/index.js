@@ -54,14 +54,16 @@ const AppNavigator = () => {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      setTimeout(
-        () =>
-          dispatch(
-            AuthActions.restoreToken(user !== null ? JSON.parse(user) : null),
-          ),
-        2000,
+      // setTimeout(
+      //   () =>
+      //     dispatch(
+      //       AuthActions.restoreToken(user !== null ? JSON.parse(user) : null),
+      //     ),
+      //   2000,
+      // );
+      dispatch(
+        AuthActions.restoreToken(user !== null ? JSON.parse(user) : null),
       );
-      // dispatch(restoreToken(user !== null ? JSON.parse(user) : null));
     };
     bootstrapAsync();
   }, [dispatch, user]);

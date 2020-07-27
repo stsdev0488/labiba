@@ -5,7 +5,6 @@ import Container from 'components/Container';
 import FormButton from 'components/Forms/FormButton';
 import { Colors, Images, Styles } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
-import { node } from 'prop-types';
 
 const styles = StyleSheet.create({
   container: {
@@ -92,7 +91,8 @@ const OnBoarding = ({ navigation }) => {
 
   const handleSkip = () => {
     if (slides) {
-      slide.current.goToSlide(2);
+      // slide.current.goToSlide(2);
+      navigation.navigate('Main');
     }
   };
 
@@ -145,10 +145,10 @@ const OnBoarding = ({ navigation }) => {
       </View>
       <AppIntroSlider
         ref={slide}
-        activeDotStyle={{ backgroundColor: Colors.primary + '46' }}
+        activeDotStyle={{ backgroundColor: Colors.primary }}
         bottomButton={true}
         data={slides}
-        dotStyle={{ backgroundColor: Colors.primary }}
+        dotStyle={{ backgroundColor: Colors.primary + '46' }}
         renderItem={renderItem}
         renderNextButton={renderNextButton}
         renderDoneButton={renderDoneButton}

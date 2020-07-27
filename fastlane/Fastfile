@@ -9,22 +9,22 @@ end
 platform :ios do
    desc 'Fetch certificates and provisioning profiles'
    lane :certificates do
-     match(app_identifier: 'org.intelladapt.optonome', type: 'appstore', readonly: false)
+     match(app_identifier: 'com.labiba.app', type: 'appstore', readonly: false)
    end
 
    desc 'Build the iOS application.'
    private_lane :build do
      certificates
      increment_build_number(xcodeproj: './ios/Optonome.xcodeproj')
-#     xcarchive(scheme: 'Optonome', workspace: './ios/Optonome.xcworkspace')
-      build_app(scheme: 'Optonome', workspace: './ios/Optonome.xcworkspace', output_directory: './Build', output_name: 'Optonome.ipa', include_bitcode: true)
+#     xcarchive(scheme: 'Labiba', workspace: './ios/Labiba.xcworkspace')
+      build_app(scheme: 'Labiba', workspace: './ios/Labiba.xcworkspace', output_directory: './Build', output_name: 'Labiba.ipa', include_bitcode: true)
    end
 
    desc 'Ship to Testflight.'
    lane :beta do
      build
-     pilot(username: 'sts.dev0488@gmail.com')
-     commit_version_bump(message: 'Bump build', xcodeproj: './ios/Optonome.xcodeproj')
+     pilot(username: 'yan.tao463@hotmail.com')
+     commit_version_bump(message: 'Bump build', xcodeproj: './ios/Labiba.xcodeproj')
      push_to_git_remote
    end
 end

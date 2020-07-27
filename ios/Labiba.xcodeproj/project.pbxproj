@@ -18,6 +18,8 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* LabibaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LabibaTests.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		9990245B24CCFDC2009FBF4A /* ScanditBarcodeScanner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9990245A24CCFDC2009FBF4A /* ScanditBarcodeScanner.framework */; };
+		9990245D24CCFDD1009FBF4A /* ScanditBarcodeScanner.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9990245C24CCFDD1009FBF4A /* ScanditBarcodeScanner.bundle */; };
 		99ED7EE924C779DC0035A101 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99ED7EE824C779DC0035A101 /* CoreText.framework */; };
 		99ED7EEB24C779E40035A101 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99ED7EEA24C779E40035A101 /* OpenGLES.framework */; };
 		99ED7EED24C779EC0035A101 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99ED7EEC24C779EC0035A101 /* MessageUI.framework */; };
@@ -31,8 +33,6 @@
 		99ED7EFD24C77A330035A101 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99ED7EFC24C77A330035A101 /* QuartzCore.framework */; };
 		99ED7EFF24C77A3A0035A101 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99ED7EFE24C77A3A0035A101 /* SystemConfiguration.framework */; };
 		99ED7F0124C77A490035A101 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99ED7F0024C77A490035A101 /* MediaPlayer.framework */; };
-		99ED7F0B24C7C57E0035A101 /* ScanditBarcodeScanner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99ED7F0A24C7C57E0035A101 /* ScanditBarcodeScanner.framework */; };
-		99ED7F0D24C7C5940035A101 /* ScanditBarcodeScanner.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 99ED7F0C24C7C5940035A101 /* ScanditBarcodeScanner.bundle */; };
 		AC1A5F945572DC50714CD232 /* libPods-Labiba-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2822C5167905BC5A59E8AAD6 /* libPods-Labiba-tvOS.a */; };
 		C8AD27B4808D462002CBDDEE /* libPods-Labiba-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 015AFDAA5EFD651A3A490AE3 /* libPods-Labiba-tvOSTests.a */; };
 /* End PBXBuildFile section */
@@ -86,6 +86,8 @@
 		83691B6569C948E494D6E936 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		86CA463A3E2F4FE7906951BD /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		8EF35E826D3B4893BA7A1BCA /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		9990245A24CCFDC2009FBF4A /* ScanditBarcodeScanner.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScanditBarcodeScanner.framework; path = "../node_modules/scandit-react-native/ios/ScanditBarcodeScanner/Frameworks/ScanditBarcodeScanner.framework"; sourceTree = "<group>"; };
+		9990245C24CCFDD1009FBF4A /* ScanditBarcodeScanner.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ScanditBarcodeScanner.bundle; path = "../node_modules/scandit-react-native/ios/ScanditBarcodeScanner/Frameworks/ScanditBarcodeScanner.framework/Resources/ScanditBarcodeScanner.bundle"; sourceTree = "<group>"; };
 		99ED7EE524C779C00035A101 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		99ED7EE624C779CD0035A101 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		99ED7EE724C779D40035A101 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -102,8 +104,6 @@
 		99ED7EFC24C77A330035A101 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		99ED7EFE24C77A3A0035A101 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		99ED7F0024C77A490035A101 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		99ED7F0A24C7C57E0035A101 /* ScanditBarcodeScanner.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScanditBarcodeScanner.framework; path = "../node_modules/scandit-react-native/ios/ScanditBarcodeScanner/Frameworks/ScanditBarcodeScanner.framework"; sourceTree = "<group>"; };
-		99ED7F0C24C7C5940035A101 /* ScanditBarcodeScanner.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ScanditBarcodeScanner.bundle; path = "../node_modules/scandit-react-native/ios/ScanditBarcodeScanner/Frameworks/ScanditBarcodeScanner.framework/Resources/ScanditBarcodeScanner.bundle"; sourceTree = "<group>"; };
 		9BE2E5B7DD7CAC8E186743FA /* Pods-Labiba-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Labiba-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Labiba-tvOSTests/Pods-Labiba-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D3C40E7BD18E6725221260FE /* libPods-Labiba.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Labiba.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA13624F17AA443D94544AC6 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 				99ED7EED24C779EC0035A101 /* MessageUI.framework in Frameworks */,
 				99ED7EF524C77A0E0035A101 /* CoreGraphics.framework in Frameworks */,
 				99ED7EF724C77A160035A101 /* AudioToolbox.framework in Frameworks */,
-				99ED7F0B24C7C57E0035A101 /* ScanditBarcodeScanner.framework in Frameworks */,
+				9990245B24CCFDC2009FBF4A /* ScanditBarcodeScanner.framework in Frameworks */,
 				99ED7EFD24C77A330035A101 /* QuartzCore.framework in Frameworks */,
 				99ED7F0124C77A490035A101 /* MediaPlayer.framework in Frameworks */,
 				99ED7EEB24C779E40035A101 /* OpenGLES.framework in Frameworks */,
@@ -202,8 +202,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				99ED7F0C24C7C5940035A101 /* ScanditBarcodeScanner.bundle */,
-				99ED7F0A24C7C57E0035A101 /* ScanditBarcodeScanner.framework */,
+				9990245C24CCFDD1009FBF4A /* ScanditBarcodeScanner.bundle */,
+				9990245A24CCFDC2009FBF4A /* ScanditBarcodeScanner.framework */,
 				99ED7F0024C77A490035A101 /* MediaPlayer.framework */,
 				99ED7EFE24C77A3A0035A101 /* SystemConfiguration.framework */,
 				99ED7EFC24C77A330035A101 /* QuartzCore.framework */,
@@ -446,7 +446,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				99ED7F0D24C7C5940035A101 /* ScanditBarcodeScanner.bundle in Resources */,
+				9990245D24CCFDD1009FBF4A /* ScanditBarcodeScanner.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -833,7 +833,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.labiba.app;
 				PRODUCT_NAME = Labiba;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -855,7 +855,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.labiba.app;
 				PRODUCT_NAME = Labiba;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
