@@ -2,8 +2,8 @@ import * as Colors from './colors';
 import { scaleW, scaleH } from 'utils/scale';
 
 export const formButton = {
-  height: scaleH(50),
-  borderRadius: scaleH(50),
+  height: scaleH(55),
+  borderRadius: scaleH(55),
   color: Colors.white,
   backgroundColor: Colors.primary,
   fontSize: scaleH(18),
@@ -21,16 +21,16 @@ export const formLabel = {
 };
 
 export const formInput = {
-  height: scaleH(36),
+  height: scaleH(55),
   backgroundColor: Colors.white,
-  borderRadius: scaleH(8),
+  borderRadius: scaleH(55),
   borderWidth: 1,
   fontSize: scaleH(8),
-  borderColor: Colors.primary,
+  borderColor: Colors.formInputBorder,
 };
 
 export const formInputStyle = {
-  fontSize: scaleH(18),
+  fontSize: scaleH(16),
   color: Colors.black,
 };
 
@@ -41,6 +41,16 @@ export const formDisabledButton = {
 
 export const formDisabledButtonText = {
   color: Colors.white,
+};
+
+export const formLeftIconContainer = {
+  width: scaleW(40),
+  alignItems: 'center',
+  marginLeft: scaleW(5),
+};
+
+export const formButtonIconContainer = {
+  marginRight: scaleW(8),
 };
 
 export const checkBoxContainer = {
@@ -57,4 +67,21 @@ export const checkBoxText = {
   fontWeight: '500',
   color: Colors.primary,
   marginLeft: scaleW(5),
+};
+
+export const linkContainer = {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  marginTop: scaleH(20),
+};
+
+export const normalLabel = {
+  fontSize: scaleH(15),
+  color: Colors.linkNormalLabel,
+};
+
+export const link = {
+  fontSize: scaleH(15),
+  fontWeight: 'bold',
+  color: Colors.placeholderText,
 };

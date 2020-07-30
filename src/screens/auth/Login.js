@@ -1,16 +1,17 @@
 import React, { Fragment, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import { Formik } from 'formik';
 import { showMessage } from 'react-native-flash-message';
 import * as Yup from 'yup';
+import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import DismissKeyboard from 'components/DismissKeyboard';
 import FormInput from 'components/Forms/FormInput';
 import FormButton from 'components/Forms/FormButton';
-import ErrorMessage from 'components/Forms/ErrorMessage';
-import SafeAreaContainer from 'components/SafeAreaContainer';
-import { Colors, Styles } from 'config';
+import Header from 'components/Header/Header';
+import Container from 'components/Container';
+import { Colors, Images, Styles } from 'config';
 import { AuthActions } from 'reduxs/actions';
 import { scaleH, scaleW } from 'utils/scale';
 
@@ -24,6 +25,10 @@ const validationSchema = Yup.object().shape({
     .required()
     .min(6, 'Password must have more than 6 characters '),
 });
+
+const FormLeftIcon = (image) => (
+  <Image source={image} style={{ width: 50, height: 50 }} />
+);
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -45,82 +50,109 @@ const Login = ({ navigation }) => {
   }, [loading, error]);
 
   return (
-    <SafeAreaContainer style={styles.container}>
+    <Container style={styles.container}>
+      <Header navigation={navigation} title="Login" />
       <DismissKeyboard>
         <KeyboardAwareScrollView>
-          <Formik
-            initialValues={{ email: '', password: '' }}
-            onSubmit={(values) => {
-              handleLogin(values);
-            }}
-            validationSchema={validationSchema}
-          >
-            {({
-              handleChange,
-              values,
-              handleSubmit,
-              errors,
-              isValid,
-              touched,
-              handleBlur,
-            }) => (
-              <Fragment>
-                <FormInput
-                  name="email"
-                  label="Email"
-                  labelStyle={Styles.formLabel}
-                  inputContainerStyle={Styles.formInput}
-                  inputStyle={Styles.formInputStyle}
-                  keyboardType="email-address"
-                  value={values.email}
-                  onChangeText={handleChange('email')}
-                  autoCapitalize="none"
-                  onBlur={handleBlur('email')}
-                />
-                {/*<ErrorMessage errorValue={touched.email && errors.email} />*/}
-                <FormInput
-                  name="password"
-                  value={values.password}
-                  onChangeText={handleChange('password')}
-                  secureTextEntry
-                  label="Password"
-                  leftIcon={null}
-                  labelStyle={Styles.formLabel}
-                  inputContainerStyle={Styles.formInput}
-                  inputStyle={Styles.formInputStyle}
-                  onBlur={handleBlur('password')}
-                />
-                {/*<ErrorMessage errorValue={touched.password && errors.password} />*/}
-                <View style={styles.buttonContainer}>
-                  <FormButton
-                    buttonStyle={{
-                      ...Styles.formButton,
-                      backgroundColor: Colors.white,
-                    }}
-                    titleStyle={{ color: Colors.primary, fontSize: scaleH(20) }}
-                    disabledStyle={Styles.formDisabledButton}
-                    disabledTitleStyle={Styles.formDisabledButtonText}
-                    onPress={handleSubmit}
-                    title="Login"
-                    disabled={!isValid || loading}
-                    loading={loading}
+          <View style={styles.formContainer}>
+            <View style={styles.logoContainer}>
+              <Image source={Images.OnBoardingImage1} style={styles.logo} />
+            </View>
+            <Formik
+              initialValues={{ email: '', password: '' }}
+              onSubmit={(values) => {
+                handleLogin(values);
+              }}
+              validationSchema={validationSchema}
+            >
+              {({
+                handleChange,
+                values,
+                handleSubmit,
+                errors,
+                isValid,
+                touched,
+                handleBlur,
+              }) => (
+                <Fragment>
+                  <FormInput
+                    name="email"
+                    inputContainerStyle={[
+                      Styles.formInput,
+                      { marginBottom: scaleH(10) },
+                    ]}
+                    inputStyle={Styles.formInputStyle}
+                    keyboardType="email-address"
+                    leftIcon={<Image source={Images.emailIcon} />}
+                    value={values.email}
+                    onChangeText={handleChange('email')}
+                    autoCapitalize="none"
+                    onBlur={handleBlur('email')}
+                    placeholder="Email"
                   />
-                  <FormButton
-                    buttonStyle={Styles.formButton}
-                    disabledStyle={Styles.formDisabledButton}
-                    disabledTitleStyle={Styles.formDisabledButtonText}
-                    titleStyle={{ fontSize: scaleH(20) }}
-                    onPress={goToSignup}
-                    title="Register"
-                    disabled={!isValid || loading}
+                  {/*<ErrorMessage errorValue={touched.email && errors.email} />*/}
+                  <FormInput
+                    name="password"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    secureTextEntry
+                    leftIcon={<Image source={Images.passwordIcon} />}
+                    inputContainerStyle={Styles.formInput}
+                    inputStyle={Styles.formInputStyle}
+                    onBlur={handleBlur('password')}
+                    placeholder="Password"
                   />
-                </View>
-              </Fragment>
-            )}
-          </Formik>
+                  {/*<ErrorMessage errorValue={touched.password && errors.password} />*/}
+                  <View style={styles.buttonContainer}>
+                    <FormButton
+                      buttonStyle={Styles.formButton}
+                      titleStyle={{ fontSize: scaleH(20) }}
+                      disabledStyle={Styles.formDisabledButton}
+                      disabledTitleStyle={Styles.formDisabledButtonText}
+                      icon={
+                        <Image
+                          source={Images.loginIcon}
+                          style={Styles.formButtonIconContainer}
+                        />
+                      }
+                      // onPress={handleSubmit}
+                      onPress={() => navigation.navigate('Main')}
+                      title="Login"
+                      disabled={!isValid || loading}
+                      loading={loading}
+                    />
+                    <FormButton
+                      buttonStyle={Styles.formButton}
+                      disabledStyle={Styles.formDisabledButton}
+                      disabledTitleStyle={Styles.formDisabledButtonText}
+                      icon={
+                        <SimpleLineIcon
+                          name="social-facebook"
+                          color={Colors.white}
+                          size={scaleH(25)}
+                        />
+                      }
+                      titleStyle={{ fontSize: scaleH(20) }}
+                      // onPress={goToSignup}
+                      title="Continue with Facebook"
+                      disabled={!isValid || loading}
+                    />
+                    <View style={Styles.linkContainer}>
+                      <Text style={Styles.normalLabel}>
+                        Don't have an account?{' '}
+                      </Text>
+                      <TouchableOpacity onPress={goToSignup}>
+                        <Text style={Styles.link}>Register</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Fragment>
+              )}
+            </Formik>
+          </View>
         </KeyboardAwareScrollView>
       </DismissKeyboard>
-    </SafeAreaContainer>
+    </Container>
   );
 };
 
@@ -128,10 +160,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingHorizontal: scaleW(45),
+  },
+  formContainer: {
+    flex: 1,
+    paddingHorizontal: scaleW(30),
   },
   buttonContainer: {
-    marginTop: scaleH(30),
+    marginTop: scaleH(0),
+  },
+  logoContainer: {
+    alignItems: 'center',
+    paddingTop: scaleH(75),
+    paddingBottom: scaleH(45),
+  },
+  logo: {
+    width: scaleH(252),
+    height: scaleH(241),
+    resizeMode: 'stretch',
   },
 });
 

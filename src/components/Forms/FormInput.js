@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import { scaleW, scaleH } from 'utils/scale';
+import { Colors, Styles } from 'config';
 
 const FormInput = ({
   iconName,
@@ -17,12 +18,9 @@ const FormInput = ({
   <View>
     <Input
       {...rest}
-      leftIcon={
-        <Ionicons name={iconName} size={scaleH(28)} color={iconColor} />
-      }
-      leftIconContainerStyle={styles.iconStyle}
+      leftIconContainerStyle={Styles.formLeftIconContainer}
       keyboardType={keyboardType}
-      placeholderTextColor="grey"
+      placeholderTextColor={Colors.placeholderText}
       name={name}
       placeholder={placeholder}
       style={styles.input}

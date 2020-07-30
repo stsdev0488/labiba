@@ -1,11 +1,15 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { View } from 'react-native';
 import Container from 'components/Container';
+import Header from 'components/Header/Header';
+import CustomSlider from 'components/Product/CustomSlider';
+import DetailItem from 'components/Product/DetailItem';
+import { Images } from 'config';
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   return (
     <Container>
-      <Text>Profile</Text>
+      <Header navigation={navigation} title="Profile" />
     </Container>
   );
 };

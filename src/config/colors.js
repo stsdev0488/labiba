@@ -11,3 +11,7 @@ export const goodScore = '#29C17E';
 export const warningScore = '#FD8E4E';
 export const badScore = '#F84C4D';
 export const skip = '#0B0B0B';
+export const border = '#6E798966';
+export const formInputBorder = '#D8DAE0';
+export const placeholderText = '#286D65';
+export const linkNormalLabel = '#6E7989';

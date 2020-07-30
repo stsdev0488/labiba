@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { Colors, Images } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import Score from './Score';
@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: scaleH(3),
+    marginTop: scaleH(Platform.OS === 'ios' ? 3 : 6),
   },
 });
 
-const FoodListItem = ({ data, onPress }) => {
+const FoodListItem = ({ data, onPress, noHistory }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={data.image} style={styles.image} />
@@ -67,15 +67,22 @@ const FoodListItem = ({ data, onPress }) => {
           </View>
           <Score score={data.score} />
         </View>
-        <View style={styles.detailContent}>
-          <View style={{ flexDirection: 'row' }}>
+        {noHistory ? (
+          <View style={styles.detailContent}>
             <Amount amount={data.amount} />
-            <View style={{ marginLeft: scaleW(5) }}>
-              <Calory amount={data.calory} />
-            </View>
+            <Calory amount={data.calory} />
           </View>
-          <Time time={data.time} />
-        </View>
+        ) : (
+          <View style={styles.detailContent}>
+            <View style={{ flexDirection: 'row' }}>
+              <Amount amount={data.amount} />
+              <View style={{ marginLeft: scaleW(5) }}>
+                <Calory amount={data.calory} />
+              </View>
+            </View>
+            <Time time={data.time} />
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );

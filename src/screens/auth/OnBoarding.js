@@ -92,7 +92,7 @@ const OnBoarding = ({ navigation }) => {
   const handleSkip = () => {
     if (slides) {
       // slide.current.goToSlide(2);
-      navigation.navigate('Main');
+      navigation.navigate('Login');
     }
   };
 
@@ -152,7 +152,7 @@ const OnBoarding = ({ navigation }) => {
         renderItem={renderItem}
         renderNextButton={renderNextButton}
         renderDoneButton={renderDoneButton}
-        onDone={() => navigation.navigate('Main')}
+        onDone={() => navigation.navigate('Login')}
       />
     </Container>
   );
