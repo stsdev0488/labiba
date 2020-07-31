@@ -24,3 +24,7 @@ export const passwordIcon = require('assets/images/formIcons/password/password.p
 export const loginIcon = require('assets/images/formIcons/login/login.png');
 export const registerIcon = require('assets/images/formIcons/register/register.png');
 export const avatar = require('assets/images/avatar/avatar.png');
+export const hamburger = require('assets/images/hamburger/hamburger.png');
+export const alternative1 = require('assets/images/alternative/alternative1.png');
+export const alternative2 = require('assets/images/alternative/alternative2.png');
+export const alternative3 = require('assets/images/alternative/alternative3.png');

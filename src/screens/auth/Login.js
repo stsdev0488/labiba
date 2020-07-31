@@ -121,22 +121,45 @@ const Login = ({ navigation }) => {
                       disabled={!isValid || loading}
                       loading={loading}
                     />
-                    <FormButton
-                      buttonStyle={Styles.formButton}
-                      disabledStyle={Styles.formDisabledButton}
-                      disabledTitleStyle={Styles.formDisabledButtonText}
-                      icon={
-                        <SimpleLineIcon
-                          name="social-facebook"
-                          color={Colors.white}
-                          size={scaleH(25)}
+                    <View style={styles.socialButtonContainer}>
+                      <View style={styles.facebookButtonContainer}>
+                        <FormButton
+                          buttonStyle={Styles.formButton}
+                          disabledStyle={Styles.formDisabledButton}
+                          disabledTitleStyle={Styles.formDisabledButtonText}
+                          icon={
+                            <SimpleLineIcon
+                              name="social-facebook"
+                              color={Colors.white}
+                              size={scaleH(25)}
+                            />
+                          }
+                          titleStyle={{ fontSize: scaleH(20) }}
+                          // onPress={goToSignup}
+                          title="Facebook"
+                          disabled={!isValid || loading}
                         />
-                      }
-                      titleStyle={{ fontSize: scaleH(20) }}
-                      // onPress={goToSignup}
-                      title="Continue with Facebook"
-                      disabled={!isValid || loading}
-                    />
+                      </View>
+                      <View style={styles.googleButtonContainer}>
+                        <FormButton
+                          buttonStyle={Styles.formButton}
+                          disabledStyle={Styles.formDisabledButton}
+                          disabledTitleStyle={Styles.formDisabledButtonText}
+                          icon={
+                            <SimpleLineIcon
+                              name="social-google"
+                              color={Colors.white}
+                              size={scaleH(25)}
+                              style={{ marginRight: scaleW(7) }}
+                            />
+                          }
+                          titleStyle={{ fontSize: scaleH(20) }}
+                          // onPress={goToSignup}
+                          title="Google"
+                          disabled={!isValid || loading}
+                        />
+                      </View>
+                    </View>
                     <View style={Styles.linkContainer}>
                       <Text style={Styles.normalLabel}>
                         Don't have an account?{' '}
@@ -177,6 +200,16 @@ const styles = StyleSheet.create({
     width: scaleH(252),
     height: scaleH(241),
     resizeMode: 'stretch',
+  },
+  socialButtonContainer: {
+    flexDirection: 'row',
+  },
+  facebookButtonContainer: {
+    flex: 1,
+  },
+  googleButtonContainer: {
+    flex: 1,
+    marginLeft: scaleW(10),
   },
 });
 

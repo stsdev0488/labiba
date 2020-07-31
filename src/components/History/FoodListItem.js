@@ -1,5 +1,12 @@
 import React from 'react';
-import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Colors, Images } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import Score from './Score';
@@ -57,7 +64,14 @@ const styles = StyleSheet.create({
 
 const FoodListItem = ({ data, onPress, noHistory }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={
+        noHistory
+          ? [styles.container, { shadowColor: 'transparent', elevation: 0 }]
+          : styles.container
+      }
+      onPress={onPress}
+    >
       <Image source={data.image} style={styles.image} />
       <View style={styles.content}>
         <View style={styles.nameContent}>

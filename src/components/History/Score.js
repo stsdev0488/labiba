@@ -24,11 +24,25 @@ const styles = StyleSheet.create({
   },
 });
 
-const Score = ({ score }) => {
+const Score = ({ score, small }) => {
   return (
-    <View style={[styles.container, { backgroundColor: getScoreColor(score) }]}>
-      <Text style={styles.title}>Score</Text>
-      <Text style={styles.score}>{score}</Text>
+    <View
+      style={[
+        styles.container,
+        {
+          width: scaleH(small ? 25 : 50),
+          height: scaleH(small ? 25 : 50),
+          borderRadius: scaleH(small ? 5 : 10),
+        },
+        { backgroundColor: getScoreColor(score) },
+      ]}
+    >
+      <Text style={[styles.title, { fontSize: scaleH(small ? 6 : 12) }]}>
+        Score
+      </Text>
+      <Text style={[styles.score, { fontSize: scaleH(small ? 12 : 22) }]}>
+        {score}
+      </Text>
     </View>
   );
 };
