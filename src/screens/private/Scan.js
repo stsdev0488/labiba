@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from 'components/Container';
 import FoodListItem from 'components/History/FoodListItem';
 import DetailItem from 'components/Product/DetailItem';
-import { Colors, Images, SCANDIT_KEY } from 'config';
+import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import AlternativeItem from 'components/Product/AlternativeItem';
 
@@ -64,6 +64,7 @@ const alternatives = [
 const styles = StyleSheet.create({
   popupContainer: {
     paddingHorizontal: scaleW(15),
+    height: Constants.deviceHeight,
   },
   popupItemDetailContainer: {
     shadowOffset: {
@@ -143,10 +144,10 @@ const Scan = ({ navigation }) => {
       />
       <BottomPanel
         ref={bottomSheet}
-        bottomSheerColor="#FF0000"
-        containerStyle={{ backgroundColor: Colors.white }}
+        bottomSheerColor={Colors.background}
+        containerStyle={{ backgroundColor: Colors.background }}
         initialPosition={0}
-        snapPoints={['0%', '35%', '100%']}
+        snapPoints={['0%', '30%', '100%']}
         isBackDrop={true}
         isBackDropDismissByPress={true}
         isRoundBorderWithTipHeader={true}
@@ -162,27 +163,32 @@ const Scan = ({ navigation }) => {
                   paddingVertical: 5,
                 }}
               />
-              <DetailItem
-                category="Saturated Fat"
-                value={7}
-                steps={[0, 2, 4, 7, 10]}
-                statusCategory="fatty"
-                thumb={Images.FatIcon}
-              />
-              <DetailItem
-                category="Sugar"
-                value={5}
-                steps={[0, 2, 4, 7, 10]}
-                statusCategory="sweet"
-                thumb={Images.SugarIcon}
-              />
-              <DetailItem
-                category="Additives"
-                value={2}
-                steps={[0, 2, 4, 7, 10]}
-                statusCategory="additive"
-                thumb={Images.AdditiveIcon}
-              />
+              <View style={{ paddingRight: scaleW(10) }}>
+                <DetailItem
+                  key="fatty"
+                  category="Saturated Fat"
+                  value={7}
+                  steps={[0, 2, 4, 7, 10]}
+                  statusCategory="fatty"
+                  thumb={Images.FatIcon}
+                />
+                <DetailItem
+                  key="sugar"
+                  category="Sugar"
+                  value={5}
+                  steps={[0, 2, 4, 7, 10]}
+                  statusCategory="sweet"
+                  thumb={Images.SugarIcon}
+                />
+                <DetailItem
+                  key="additive"
+                  category="Additives"
+                  value={2}
+                  steps={[0, 2, 4, 7, 10]}
+                  statusCategory="additive"
+                  thumb={Images.AdditiveIcon}
+                />
+              </View>
             </View>
             <View style={styles.alternativeContainer}>
               <View style={styles.alternativeHeader}>
@@ -205,8 +211,11 @@ const Scan = ({ navigation }) => {
                 </View>
               </View>
               <FlatList
-                style={{ width: '100%' }}
-                contentContainerStyle={{ paddingVertical: scaleH(20) }}
+                style={{ height: scaleH(500) }}
+                contentContainerStyle={{
+                  paddingTop: scaleH(20),
+                  paddingHorizontal: scaleW(5),
+                }}
                 data={alternatives}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
@@ -214,6 +223,7 @@ const Scan = ({ navigation }) => {
                 renderItem={({ item, index }) => (
                   <AlternativeItem data={item} key={item.id} />
                 )}
+                keyExtractor={(item, index) => index.toString()}
               />
             </View>
           </View>

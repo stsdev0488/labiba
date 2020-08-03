@@ -135,7 +135,7 @@ const Login = ({ navigation }) => {
                             />
                           }
                           titleStyle={{ fontSize: scaleH(20) }}
-                          // onPress={goToSignup}
+                          onPress={() => navigation.navigate('Main')}
                           title="Facebook"
                           disabled={!isValid || loading}
                         />
@@ -154,7 +154,7 @@ const Login = ({ navigation }) => {
                             />
                           }
                           titleStyle={{ fontSize: scaleH(20) }}
-                          // onPress={goToSignup}
+                          onPress={() => navigation.navigate('Main')}
                           title="Google"
                           disabled={!isValid || loading}
                         />

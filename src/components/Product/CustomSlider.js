@@ -53,7 +53,10 @@ const CustomSlider = ({ value, steps, category }) => {
         <View style={[styles.stepBar, { backgroundColor: Colors.badScore }]} />
       </View>
       {steps.map((item, index) => (
-        <View style={[styles.stepItemContainer, { left: (index * width) / 4 }]}>
+        <View
+          key={index}
+          style={[styles.stepItemContainer, { left: (index * width) / 4 }]}
+        >
           <View style={styles.stepItemBar} />
           <Text style={styles.stepLabel}>{steps[index]}</Text>
         </View>

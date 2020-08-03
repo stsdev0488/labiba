@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { scaleH, scaleW } from 'utils/scale';
-import { Colors, Images } from 'config';
+import { Colors } from 'config';
 import Score from 'components/History/Score';
 
 const styles = StyleSheet.create({
   container: {
     width: scaleW(120),
+    height: scaleH(160),
     backgroundColor: Colors.white,
     borderRadius: scaleH(10),
     shadowOffset: {

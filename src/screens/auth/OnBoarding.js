@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 
 const slides = [
   {
-    key: 1,
+    key: '1',
     title: 'Welcome!',
     text:
       'Labiba is a completely independent App that help you choose the right product',
@@ -71,14 +71,14 @@ const slides = [
     backgroundColor: Colors.white,
   },
   {
-    key: 2,
+    key: '2',
     title: 'Product analysis',
     text: 'Labiba scans products and assesses their health benefits',
     image: Images.OnBoardingImage2,
     backgroundColor: Colors.white,
   },
   {
-    key: 3,
+    key: '3',
     title: 'Recommendations',
     text: 'Labiba recommends healthier alternatives products and other...',
     image: Images.OnBoardingImage3,
@@ -114,7 +114,7 @@ const OnBoarding = ({ navigation }) => {
           disabled
           disabledStyle={{ backgroundColor: Colors.primary }}
           disabledTitleStyle={{ color: Colors.white }}
-          buttonStyle={[Styles.formButton, styles.nextButton]}
+          buttonStyle={{ ...Styles.formButton, ...styles.nextButton}}
           titleStyle={{ fontSize: 18, fontWeight: 'bold' }}
         />
       </View>
@@ -129,7 +129,7 @@ const OnBoarding = ({ navigation }) => {
           disabled
           disabledStyle={{ backgroundColor: Colors.primary }}
           disabledTitleStyle={{ color: Colors.white }}
-          buttonStyle={[Styles.formButton, styles.nextButton]}
+          buttonStyle={{ ...Styles.formButton, ...styles.nextButton }}
           titleStyle={{ fontSize: 18, fontWeight: 'bold' }}
         />
       </View>

@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AnimatedTabBar from 'curved-bottom-navigation-bar';
-import Icon from 'react-native-vector-icons/AntDesign';
 import Favorite from 'screens/private/Favorite';
 import MedicalRecord from 'screens/private/MedicalRecord';
 import History from 'screens/private/History';
@@ -104,7 +103,6 @@ const MainTabNavigator = () => {
       tabBarOptions={{
         activeTintColor: Colors.primary,
         inactiveTintColor: Colors.label,
-        showLabel: true,
       }}
       tabBar={(props) => (
         <AnimatedTabBar
