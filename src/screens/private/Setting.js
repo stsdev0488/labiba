@@ -1,11 +1,20 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
 import SafeAreaContainer from 'components/SafeAreaContainer';
+import { logout } from 'reduxs/actions/auth';
 
 const Setting = () => {
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <SafeAreaContainer>
-      <Text>Setting</Text>
+      <TouchableOpacity onPress={handleLogout}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
     </SafeAreaContainer>
   );
 };

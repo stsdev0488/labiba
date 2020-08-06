@@ -16,6 +16,7 @@ import DetailItem from 'components/Product/DetailItem';
 import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import AlternativeItem from 'components/Product/AlternativeItem';
+import {findProduct} from "services/productService";
 
 const data = {
   id: 4,
@@ -123,7 +124,10 @@ const Scan = ({ navigation }) => {
     //     ' ' +
     //     session.newlyRecognizedCodes[0].symbology,
     // );
-    bottomSheet.current.snapTo(1);
+    const code = session.newlyRecognizedCodes[0].data;
+    const product = findProduct(code);
+    console.log('product ', product);
+    // bottomSheet.current.snapTo(1);
   };
 
   const isFocused = useIsFocused();

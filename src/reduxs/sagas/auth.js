@@ -25,7 +25,7 @@ function* login(action) {
   } catch (error) {
     yield put({
       type: AUTH_LOGIN_ERROR,
-      payload: error.response.data.errors[0],
+      payload: error.response.data.error,
     });
   }
 }
@@ -33,12 +33,7 @@ function* login(action) {
 function* register(action) {
   try {
     yield put({ type: AUTH_REGISTER_REQUEST });
-    const { email, password, confirmPassword } = action.payload;
-    const response = yield call(ApiHandler.auth.register, {
-      email,
-      password,
-      confirm_password: confirmPassword,
-    });
+    const response = yield call(ApiHandler.auth.register, action.payload);
     if (response.status === 200 || response.status === 201) {
       AsyncStorage.setItem('user', JSON.stringify(response.data));
       yield put({ type: AUTH_REGISTER_SUCCESS, payload: response.data });
@@ -48,7 +43,7 @@ function* register(action) {
   } catch (error) {
     yield put({
       type: AUTH_REGISTER_ERROR,
-      payload: error.response.data.errors[0],
+      payload: error.response.data.error,
     });
   }
 }

@@ -90,7 +90,6 @@ const Login = ({ navigation }) => {
                     onBlur={handleBlur('email')}
                     placeholder="Email"
                   />
-                  {/*<ErrorMessage errorValue={touched.email && errors.email} />*/}
                   <FormInput
                     name="password"
                     value={values.password}
@@ -102,7 +101,6 @@ const Login = ({ navigation }) => {
                     onBlur={handleBlur('password')}
                     placeholder="Password"
                   />
-                  {/*<ErrorMessage errorValue={touched.password && errors.password} />*/}
                   <View style={styles.buttonContainer}>
                     <FormButton
                       buttonStyle={Styles.formButton}
@@ -115,8 +113,7 @@ const Login = ({ navigation }) => {
                           style={Styles.formButtonIconContainer}
                         />
                       }
-                      // onPress={handleSubmit}
-                      onPress={() => navigation.navigate('Main')}
+                      onPress={handleSubmit}
                       title="Login"
                       disabled={!isValid || loading}
                       loading={loading}

@@ -10,6 +10,7 @@ target 'Labiba' do
 
   pod 'scandit-react-native', :path => '../node_modules/scandit-react-native'
 
+
   target 'LabibaTests' do
     inherit! :complete
     # Pods for testing

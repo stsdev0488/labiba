@@ -7,7 +7,7 @@ import apiHandler from '../helper';
  * @return success/failure, json message
  */
 export const login = ({ email, password }) =>
-  apiHandler('post', '/users/login', false, {
+  apiHandler('post', '/auth/login', false, {
     email,
     password,
   });
@@ -15,12 +15,13 @@ export const login = ({ email, password }) =>
 /**
  * Send register request
  * @type Authentication
- * @param {*} { email, password, confirmPassword }
+ * @param {*} { fullname, email, password, facebookId }
  * @return success/failure, json message
  */
-export const register = ({ email, password, confirmPassword }) =>
-  apiHandler('post', '/users/register', false, {
+export const register = ({ fullname, email, password, facebookId }) =>
+  apiHandler('post', '/auth/signup', false, {
+    fullname,
     email,
     password,
-    confirm_password: confirmPassword,
+    facebookId,
   });

@@ -45,50 +45,12 @@ const AppNavigator = () => {
       } catch (e) {
         // Restoring token failed
       }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      // setTimeout(
-      //   () =>
-      //     dispatch(
-      //       AuthActions.restoreToken(user !== null ? JSON.parse(user) : null),
-      //     ),
-      //   2000,
-      // );
       dispatch(
         AuthActions.restoreToken(user !== null ? JSON.parse(user) : null),
       );
     };
     bootstrapAsync();
   }, [dispatch, user]);
-
-  // return (
-  //   <AppStack.Navigator>
-  //     {initialLoading ? (
-  //       <AppStack.Screen
-  //         name="AuthLoading"
-  //         component={AuthLoading}
-  //         options={{ headerShown: false }}
-  //       />
-  //     ) : !user ? (
-  //       <AppStack.Screen
-  //         name="Auth"
-  //         component={AuthNavigator}
-  //         options={{
-  //           headerShown: false,
-  //         }}
-  //       />
-  //     ) : (
-  //       <AppStack.Screen
-  //         name="Main"
-  //         component={MainTabNavigator}
-  //         options={{ headerShown: false }}
-  //       />
-  //     )}
-  //   </AppStack.Navigator>
-  // );
 
   return (
     <AppStack.Navigator>
@@ -98,21 +60,20 @@ const AppNavigator = () => {
           component={AuthLoading}
           options={{ headerShown: false }}
         />
+      ) : !user ? (
+        <AppStack.Screen
+          name="Auth"
+          component={AuthNavigator}
+          options={{
+            headerShown: false,
+          }}
+        />
       ) : (
-        <>
-          <AppStack.Screen
-            name="Auth"
-            component={AuthNavigator}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <AppStack.Screen
-            name="Main"
-            component={MainTabNavigator}
-            options={{ headerShown: false }}
-          />
-        </>
+        <AppStack.Screen
+          name="Main"
+          component={MainTabNavigator}
+          options={{ headerShown: false }}
+        />
       )}
     </AppStack.Navigator>
   );

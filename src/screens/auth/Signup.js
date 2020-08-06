@@ -18,7 +18,7 @@ import DismissKeyboard from 'components/DismissKeyboard';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().label('Name').required('Name is required'),
+  fullname: Yup.string().label('Name').required('Name is required'),
   email: Yup.string()
     .label('Email')
     .email('Enter a valid email')
@@ -35,10 +35,16 @@ const validationSchema = Yup.object().shape({
 const Signup = ({ navigation }) => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
-  const [checked, setChecked] = useState(false);
 
   const handleRegister = (values) => {
-    dispatch(AuthActions.register(values));
+    dispatch(
+      AuthActions.register({
+        fullname: values.fullname,
+        email: values.email,
+        password: values.password,
+        facebookId: '',
+      }),
+    );
   };
 
   const goToLogin = () => {
@@ -74,7 +80,7 @@ const Signup = ({ navigation }) => {
             </View>
             <Formik
               initialValues={{
-                name: '',
+                fullname: '',
                 email: '',
                 password: '',
                 confirmPassword: '',
@@ -98,11 +104,11 @@ const Signup = ({ navigation }) => {
                     inputContainerStyle={Styles.formInput}
                     inputStyle={Styles.formInputStyle}
                     leftIcon={<Image source={Images.userIcon} />}
-                    name="name"
+                    name="fullname"
                     placeholder="Name"
-                    value={values.name}
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
+                    value={values.fullname}
+                    onChangeText={handleChange('fullname')}
+                    onBlur={handleBlur('fullname')}
                   />
                   <FormInput
                     inputContainerStyle={Styles.formInput}
@@ -116,7 +122,6 @@ const Signup = ({ navigation }) => {
                     autoCapitalize="none"
                     onBlur={handleBlur('email')}
                   />
-                  {/*<ErrorMessage errorValue={touched.email && errors.email} />*/}
                   <FormInput
                     inputContainerStyle={Styles.formInput}
                     inputStyle={Styles.formInputStyle}
@@ -128,7 +133,6 @@ const Signup = ({ navigation }) => {
                     secureTextEntry
                     onBlur={handleBlur('password')}
                   />
-                  {/*<ErrorMessage errorValue={touched.password && errors.password} />*/}
                   <FormInput
                     inputContainerStyle={Styles.formInput}
                     inputStyle={Styles.formInputStyle}
@@ -140,7 +144,6 @@ const Signup = ({ navigation }) => {
                     secureTextEntry
                     onBlur={handleBlur('confirmPassword')}
                   />
-                  {/*<ErrorMessage errorValue={touched.confirmPassword && errors.confirmPassword} />*/}
                   <View style={styles.buttonContainer}>
                     <FormButton
                       buttonStyle={Styles.formButton}
@@ -153,8 +156,7 @@ const Signup = ({ navigation }) => {
                           style={Styles.formButtonIconContainer}
                         />
                       }
-                      // onPress={handleSubmit}
-                      onPress={() => navigation.navigate('Main')}
+                      onPress={handleSubmit}
                       title="Register"
                       disabled={!isValid || loading}
                       loading={loading}
