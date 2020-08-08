@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>246340283742-f387ggtb9cb1heeh0hsv1q6thqd7s54c.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.246340283742-f387ggtb9cb1heeh0hsv1q6thqd7s54c</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBbkT_hbecunE6ZA9ZjQ5_D5UAFeF9W2I8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>246340283742</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.labiba.app</string>
+	<key>PROJECT_ID</key>
+	<string>labiba-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>labiba-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:246340283742:ios:d2083a7985f3b6847133cf</string>
+	<key>DATABASE_URL</key>
+	<string>https://labiba-app.firebaseio.com</string>
+</dict>
+</plist>

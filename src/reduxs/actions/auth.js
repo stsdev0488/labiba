@@ -33,6 +33,12 @@ export const loginWithFB = (payload) => ({
   payload,
 });
 
+/* Login with Google */
+export const loginWithGoogle = (payload) => ({
+  type: AUTH_LOGIN_SUCCESS,
+  payload,
+});
+
 /* Logout */
 export const logout = (payload) => ({
   type: AUTH_LOGOUT,

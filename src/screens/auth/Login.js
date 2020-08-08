@@ -6,6 +6,10 @@ import {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-community/google-signin';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import { Formik } from 'formik';
 import { showMessage } from 'react-native-flash-message';
@@ -19,7 +23,6 @@ import Container from 'components/Container';
 import { Colors, Images, Styles } from 'config';
 import { AuthActions } from 'reduxs/actions';
 import { scaleH, scaleW } from 'utils/scale';
-import {loginWithFB} from "reduxs/actions/auth";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -61,7 +64,7 @@ const Login = ({ navigation }) => {
         picture: result.picture,
         birthday: result.birthday,
       };
-      dispatch(loginWithFB(data));
+      dispatch(AuthActions.loginWithFB(data));
     }
   };
 
@@ -110,7 +113,33 @@ const Login = ({ navigation }) => {
     );
   };
 
-  const handleGoogleLogin = () => {};
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const info = await GoogleSignin.signIn();
+      console.log('google info ', info);
+      const data = {
+        fullname: info.user.name,
+        email: info.user.email,
+        id: info.user.id,
+        picture: info.user.photo,
+        token: info.idToken,
+      };
+      dispatch(AuthActions.loginWithGoogle(data));
+    } catch (e) {
+      if (e.code === statusCodes.SIGN_IN_CANCELLED) {
+        showMessage({
+          type: 'warning',
+          message: 'Google signin canceled.',
+        });
+      } else if (e.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        showMessage({
+          type: 'danger',
+          message: 'Please setup Google Play Service.',
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     if (!loading && error) {
@@ -120,6 +149,19 @@ const Login = ({ navigation }) => {
       });
     }
   }, [loading, error]);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      webClientId:
+        '246340283742-hnqubt93ivg5bcovfacdiuphogl8d3do.apps.googleusercontent.com',
+      offlineAccess: true,
+      forceCodeForRefreshToken: true,
+      hostedDomain: '',
+      forceConsentPrompt: true,
+      accountName: '',
+    });
+  }, []);
 
   return (
     <Container style={styles.container}>
