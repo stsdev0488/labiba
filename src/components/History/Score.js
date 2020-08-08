@@ -41,7 +41,7 @@ const Score = ({ score, small }) => {
         Score
       </Text>
       <Text style={[styles.score, { fontSize: scaleH(small ? 12 : 22) }]}>
-        {score}
+        {score?.toString().substr(0, 3)}
       </Text>
     </View>
   );

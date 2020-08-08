@@ -17,7 +17,6 @@ function* login(action) {
     yield put({ type: AUTH_LOGIN_REQUEST });
     const response = yield call(ApiHandler.auth.login, action.payload);
     if (response.status === 200) {
-      AsyncStorage.setItem('user', JSON.stringify(response.data));
       yield put({ type: AUTH_LOGIN_SUCCESS, payload: response.data });
     } else {
       yield put({ type: AUTH_LOGIN_ERROR, payload: response.data });

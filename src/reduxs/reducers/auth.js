@@ -34,6 +34,7 @@ export default function (state = initialState, action) {
         error: null,
       };
     case AUTH_LOGIN_SUCCESS:
+      AsyncStorage.setItem('user', JSON.stringify(action.payload));
       return {
         ...state,
         loading: false,

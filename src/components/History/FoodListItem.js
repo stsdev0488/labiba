@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   image: {
     width: scaleH(85),
     height: scaleH(85),
+    borderRadius: scaleH(10),
     resizeMode: 'cover',
   },
   name: {

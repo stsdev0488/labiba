@@ -27,6 +27,12 @@ export const register = (payload) => ({
   payload,
 });
 
+/* Login with Facebook */
+export const loginWithFB = (payload) => ({
+  type: AUTH_LOGIN_SUCCESS,
+  payload,
+});
+
 /* Logout */
 export const logout = (payload) => ({
   type: AUTH_LOGOUT,

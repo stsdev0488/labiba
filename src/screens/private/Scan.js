@@ -10,13 +10,15 @@ import {
   ScanSettings,
 } from 'scandit-react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { showMessage } from 'react-native-flash-message';
 import Container from 'components/Container';
 import FoodListItem from 'components/History/FoodListItem';
 import DetailItem from 'components/Product/DetailItem';
 import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import AlternativeItem from 'components/Product/AlternativeItem';
-import {findProduct} from "services/productService";
+import * as ProductService from 'services/productService';
+import { getProduct } from 'services/apis/product';
 
 const data = {
   id: 4,
@@ -112,22 +114,43 @@ const scanSettings = new ScanSettings();
 scanSettings.setSymbologyEnabled(Barcode.Symbology.EAN13, true);
 scanSettings.setSymbologyEnabled(Barcode.Symbology.EAN8, true);
 scanSettings.setSymbologyEnabled(Barcode.Symbology.UPCA, true);
+scanSettings.codeDuplicateFilter = 3000;
 
 const Scan = ({ navigation }) => {
   const [, setFocused] = useState();
+  const [product, setProduct] = useState({});
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
 
-  const handleScan = (session) => {
-    // alert(
-    //   session.newlyRecognizedCodes[0].data +
-    //     ' ' +
-    //     session.newlyRecognizedCodes[0].symbology,
-    // );
+  const handleScan = async (session) => {
     const code = session.newlyRecognizedCodes[0].data;
-    const product = findProduct(code);
-    console.log('product ', product);
-    // bottomSheet.current.snapTo(1);
+    const products = await ProductService.findProduct(code);
+    console.log('local products ', products.length);
+    if (!products.length) {
+      getProduct(code)
+        .then((response) => {
+          if (response.data.product.code) {
+            console.log('online product ', response.data.product);
+            ProductService.saveProduct(response.data.product);
+            bottomSheet.current.snapTo(1);
+          } else {
+            showMessage({
+              type: 'warning',
+              message: 'No product found!',
+            });
+          }
+        })
+        .catch((error) => {
+          showMessage({
+            type: 'danger',
+            message: 'Get product info failed!',
+          });
+        });
+    } else {
+      console.log('local product ', products[0]);
+      setProduct(products[0]);
+      bottomSheet.current.snapTo(1);
+    }
   };
 
   const isFocused = useIsFocused();
@@ -159,7 +182,19 @@ const Scan = ({ navigation }) => {
         body={
           <View style={styles.popupContainer}>
             <View style={styles.popupItemDetailContainer}>
-              <FoodListItem data={data} noHistory />
+              <FoodListItem
+                data={{
+                  id: 1,
+                  name: 'Halo Top Ice Cream Pint, MInt Chip',
+                  category: 'Nestle',
+                  score: product.score,
+                  amount: '350',
+                  calory: '120',
+                  time: '8 day ago',
+                  image: { uri: product.image_url },
+                }}
+                noHistory
+              />
               <View
                 style={{
                   borderColor: Colors.border,

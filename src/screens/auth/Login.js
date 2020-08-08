@@ -1,6 +1,11 @@
 import React, { Fragment, useEffect } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  LoginManager,
+  GraphRequest,
+  GraphRequestManager,
+} from 'react-native-fbsdk';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import { Formik } from 'formik';
 import { showMessage } from 'react-native-flash-message';
@@ -14,6 +19,7 @@ import Container from 'components/Container';
 import { Colors, Images, Styles } from 'config';
 import { AuthActions } from 'reduxs/actions';
 import { scaleH, scaleW } from 'utils/scale';
+import {loginWithFB} from "reduxs/actions/auth";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -39,6 +45,72 @@ const Login = ({ navigation }) => {
   const handleLogin = (values) => {
     dispatch(AuthActions.login(values));
   };
+
+  const _responseInfoCallback = (error, result) => {
+    if (error) {
+      showMessage({
+        type: 'danger',
+        message: 'Error fetching data: ' + JSON.stringify(error),
+      });
+    } else {
+      console.log('result ', result);
+      const data = {
+        fbId: result.id,
+        fullname: `${result.first_name} ${result.last_name}`,
+        email: result.email,
+        picture: result.picture,
+        birthday: result.birthday,
+      };
+      dispatch(loginWithFB(data));
+    }
+  };
+
+  const infoRequest = new GraphRequest(
+    '/me',
+    {
+      parameters: {
+        fields: {
+          string:
+            'id, email, picture.type(large), first_name, last_name, age_range, birthday ',
+        },
+      },
+    },
+    _responseInfoCallback,
+  );
+
+  const startFbLogin = () =>
+    new GraphRequestManager().addRequest(infoRequest).start();
+
+  const handleFacebookLogin = () => {
+    LoginManager.logInWithPermissions([
+      'public_profile',
+      'user_birthday',
+      'email',
+    ]).then(
+      function (result) {
+        if (result.isCancelled) {
+          showMessage({
+            type: 'warning',
+            message: 'Login was cancelled',
+          });
+        } else {
+          startFbLogin();
+          console.log(
+            'Login was successful with permissions: ' +
+              result.grantedPermissions.toString(),
+          );
+        }
+      },
+      function (error) {
+        showMessage({
+          type: 'warning',
+          message: 'Login failed with error: ' + error,
+        });
+      },
+    );
+  };
+
+  const handleGoogleLogin = () => {};
 
   useEffect(() => {
     if (!loading && error) {
@@ -132,7 +204,7 @@ const Login = ({ navigation }) => {
                             />
                           }
                           titleStyle={{ fontSize: scaleH(20) }}
-                          onPress={() => navigation.navigate('Main')}
+                          onPress={handleFacebookLogin}
                           title="Facebook"
                           disabled={!isValid || loading}
                         />
@@ -151,7 +223,7 @@ const Login = ({ navigation }) => {
                             />
                           }
                           titleStyle={{ fontSize: scaleH(20) }}
-                          onPress={() => navigation.navigate('Main')}
+                          onPress={handleGoogleLogin}
                           title="Google"
                           disabled={!isValid || loading}
                         />
