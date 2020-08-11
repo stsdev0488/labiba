@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "246340283742",
+    "firebase_url": "https://labiba-app.firebaseio.com",
+    "project_id": "labiba-app",
+    "storage_bucket": "labiba-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246340283742:android:f72b3315b140feea7133cf",
+        "android_client_info": {
+          "package_name": "com.labiba"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246340283742-u6ljq16sdbi40i18knea9gaicog0mr1h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.labiba",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "246340283742-hnqubt93ivg5bcovfacdiuphogl8d3do.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6bsiStVTKQTe_XFKufhcwgNxIaRRnysU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246340283742-hnqubt93ivg5bcovfacdiuphogl8d3do.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "246340283742-f387ggtb9cb1heeh0hsv1q6thqd7s54c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.labiba.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

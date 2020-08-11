@@ -127,6 +127,7 @@ const Login = ({ navigation }) => {
       };
       dispatch(AuthActions.loginWithGoogle(data));
     } catch (e) {
+      console.log(e);
       if (e.code === statusCodes.SIGN_IN_CANCELLED) {
         showMessage({
           type: 'warning',
