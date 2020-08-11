@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Labiba</string>
+    <string name="facebook_app_id">1130605477333592</string>
+    <string name="fb_login_protocol_scheme">fb1130605477333592</string>
 </resources>
