@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     borderRadius: scaleH(10),
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   title: {
     fontSize: scaleH(12),

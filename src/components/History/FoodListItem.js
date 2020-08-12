@@ -13,6 +13,7 @@ import Score from './Score';
 import Amount from './Amount';
 import Calory from './Calory';
 import Time from 'components/History/Time';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const styles = StyleSheet.create({
   container: {
@@ -59,11 +60,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: scaleH(Platform.OS === 'ios' ? 3 : 6),
+    marginTop: scaleH(Platform.OS === 'ios' ? 10 : 15),
   },
 });
 
-const FoodListItem = ({ data, onPress, noHistory }) => {
+const FoodListItem = ({
+  data,
+  onPress,
+  noHistory,
+  favorite,
+  handleAddFavorite,
+}) => {
   return (
     <TouchableOpacity
       style={
@@ -82,22 +89,35 @@ const FoodListItem = ({ data, onPress, noHistory }) => {
           </View>
           <Score score={data.score} />
         </View>
-        {noHistory ? (
-          <View style={styles.detailContent}>
+        <View style={styles.detailContent}>
+          <View style={{ flexDirection: 'row' }}>
             <Amount amount={data.amount} />
-            <Calory amount={data.calory} />
-          </View>
-        ) : (
-          <View style={styles.detailContent}>
-            <View style={{ flexDirection: 'row' }}>
-              <Amount amount={data.amount} />
-              <View style={{ marginLeft: scaleW(5) }}>
-                <Calory amount={data.calory} />
-              </View>
+            <View style={{ marginLeft: scaleW(5) }}>
+              <Calory amount={data.calory} />
             </View>
-            <Time time={data.time} />
           </View>
-        )}
+          {!noHistory ? (
+            <Time time={data.time} />
+          ) : favorite ? (
+            <TouchableOpacity onPress={handleAddFavorite}>
+              <Icon
+                name="heart"
+                color={Colors.primary}
+                size={scaleH(22)}
+                style={{ marginRight: scaleW(10) }}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleAddFavorite}>
+              <Icon
+                name="hearto"
+                color={Colors.formInputBorder}
+                size={scaleH(22)}
+                style={{ marginRight: scaleW(10) }}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );

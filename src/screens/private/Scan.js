@@ -19,6 +19,7 @@ import { scaleH, scaleW } from 'utils/scale';
 import AlternativeItem from 'components/Product/AlternativeItem';
 import * as ProductService from 'services/productService';
 import { getProduct } from 'services/apis/product';
+import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
 
 const data = {
   id: 4,
@@ -119,6 +120,7 @@ scanSettings.codeDuplicateFilter = 3000;
 const Scan = ({ navigation }) => {
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
+  const [favoriteCategoryVisible, setFavoriteCategoryVisible] = useState(false);
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
 
@@ -153,6 +155,11 @@ const Scan = ({ navigation }) => {
     }
   };
 
+  const handleAddFavorite = () => {
+    bottomSheet.current.snapTo(0);
+    setFavoriteCategoryVisible(true);
+  };
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -173,7 +180,7 @@ const Scan = ({ navigation }) => {
         ref={bottomSheet}
         bottomSheerColor={Colors.background}
         containerStyle={{ backgroundColor: Colors.background }}
-        initialPosition={0}
+        initialPosition={300}
         snapPoints={['0%', '30%', '100%']}
         isBackDrop={true}
         isBackDropDismissByPress={true}
@@ -194,6 +201,7 @@ const Scan = ({ navigation }) => {
                   image: { uri: product.image_url },
                 }}
                 noHistory
+                handleAddFavorite={handleAddFavorite}
               />
               <View
                 style={{
@@ -267,6 +275,10 @@ const Scan = ({ navigation }) => {
             </View>
           </View>
         }
+      />
+      <FavoriteCategoryModal
+        visible={favoriteCategoryVisible}
+        closeModal={() => setFavoriteCategoryVisible(false)}
       />
     </Container>
   );

@@ -71,7 +71,7 @@ export const NutrimentSchema = {
       default: 'mg',
     },
     'nova-group': 'float?',
-    fat_value: 'float',
+    fat_value: 'float?',
     salt_serving: 'float?',
     calcium_100g: 'float?',
     sugars_serving: 'float?',
