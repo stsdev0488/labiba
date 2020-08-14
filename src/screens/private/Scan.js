@@ -20,6 +20,7 @@ import { scaleH, scaleW } from 'utils/scale';
 import AlternativeItem from 'components/Product/AlternativeItem';
 import * as ProductService from 'services/productService';
 import { getProduct } from 'services/apis/product';
+import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
 
 const data = {
   id: 4,
@@ -137,6 +138,7 @@ scanSettings.codeDuplicateFilter = 3000;
 const Scan = ({ navigation }) => {
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
+  const [favoriteCategoryVisible, setFavoriteCategoryVisible] = useState(false);
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
   let fall = new Animated.Value(1)
@@ -171,6 +173,11 @@ const Scan = ({ navigation }) => {
     }
   };
 
+  const handleAddFavorite = () => {
+    bottomSheet.current.snapTo(0);
+    setFavoriteCategoryVisible(true);
+  };
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -181,7 +188,7 @@ const Scan = ({ navigation }) => {
 
 
   const renderContent = () => {
-    const {nutriments = {}} = product || {};
+    const { nutriments = {} } = product || {};
     const energy = nutriments['energy-kcal_serving'];
     const sugar = nutriments['sugars_100g'];
     const carbohydrates = nutriments['carbohydrates_100g'];
@@ -191,15 +198,15 @@ const Scan = ({ navigation }) => {
         <View style={styles.popupItemDetailContainer}>
           <FoodListItem
             data={{
-              id: product.code,
               name: product.product_name,
               category: product.brands,
               score: product.score,
-              amount: product.serving_size,
+              amount: '350',
               calory: energy,
               image: { uri: product.image_url },
             }}
             noHistory
+            handleAddFavorite={handleAddFavorite}
           />
           <View
             style={{
@@ -212,7 +219,7 @@ const Scan = ({ navigation }) => {
             <DetailItem
               key="fatty"
               category="Saturated Fat"
-              value={fat}
+              value={7}
               steps={[0, 2, 4, 7, 10]}
               statusCategory="fatty"
               thumb={Images.FatIcon}
@@ -220,15 +227,15 @@ const Scan = ({ navigation }) => {
             <DetailItem
               key="sugar"
               category="Sugar"
-              value={sugar}
+              value={5}
               steps={[0, 2, 4, 7, 10]}
               statusCategory="sweet"
               thumb={Images.SugarIcon}
             />
             <DetailItem
-              key="carbohydrates"
-              category="Carbohydrates"
-              value={carbohydrates}
+              key="additive"
+              category="Additives"
+              value={2}
               steps={[0, 2, 4, 7, 10]}
               statusCategory="additive"
               thumb={Images.AdditiveIcon}
@@ -281,7 +288,7 @@ const Scan = ({ navigation }) => {
       </View>
     </View>
   )
-    console.log(product);
+  console.log(product);
   return (
     <Container>
       <BottomPanel
@@ -303,6 +310,10 @@ const Scan = ({ navigation }) => {
         onScan={(session) => handleScan(session)}
         scanSettings={scanSettings}
         style={{ flex: 1 }}
+      />
+      <FavoriteCategoryModal
+        visible={favoriteCategoryVisible}
+        closeModal={() => setFavoriteCategoryVisible(false)}
       />
     </Container>
   );
