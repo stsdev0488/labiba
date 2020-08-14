@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
-import BottomPanel from 'react-native-bottomsheet-reanimated';
+import BottomPanel from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated'
 import {
   BarcodePicker,
   ScanditModule,
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
   popupContainer: {
     paddingHorizontal: scaleW(15),
     height: Constants.deviceHeight,
+    backgroundColor: Colors.background
   },
   popupItemDetailContainer: {
     shadowOffset: {
@@ -107,6 +109,22 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.primary,
   },
+  header: {
+    backgroundColor: Colors.background,
+    paddingTop: 10,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  panelHeader: {
+    alignItems: 'center',
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
+  },
 });
 
 ScanditModule.setAppKey(SCANDIT_KEY);
@@ -121,7 +139,7 @@ const Scan = ({ navigation }) => {
   const [product, setProduct] = useState({});
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
-
+  let fall = new Animated.Value(1)
   const handleScan = async (session) => {
     const code = session.newlyRecognizedCodes[0].data;
     const products = await ProductService.findProduct(code);
@@ -161,112 +179,130 @@ const Scan = ({ navigation }) => {
     }
   }, [isFocused]);
 
+
+  const renderContent = () => {
+    const {nutriments = {}} = product || {};
+    const energy = nutriments['energy-kcal_serving'];
+    const sugar = nutriments['sugars_100g'];
+    const carbohydrates = nutriments['carbohydrates_100g'];
+    const fat = nutriments['fat_100g'];
+    return (
+      <View style={styles.popupContainer}>
+        <View style={styles.popupItemDetailContainer}>
+          <FoodListItem
+            data={{
+              id: product.code,
+              name: product.product_name,
+              category: product.brands,
+              score: product.score,
+              amount: product.serving_size,
+              calory: energy,
+              image: { uri: product.image_url },
+            }}
+            noHistory
+          />
+          <View
+            style={{
+              borderColor: Colors.border,
+              borderBottomWidth: 1,
+              paddingVertical: 5,
+            }}
+          />
+          <View style={{ paddingRight: scaleW(10) }}>
+            <DetailItem
+              key="fatty"
+              category="Saturated Fat"
+              value={fat}
+              steps={[0, 2, 4, 7, 10]}
+              statusCategory="fatty"
+              thumb={Images.FatIcon}
+            />
+            <DetailItem
+              key="sugar"
+              category="Sugar"
+              value={sugar}
+              steps={[0, 2, 4, 7, 10]}
+              statusCategory="sweet"
+              thumb={Images.SugarIcon}
+            />
+            <DetailItem
+              key="carbohydrates"
+              category="Carbohydrates"
+              value={carbohydrates}
+              steps={[0, 2, 4, 7, 10]}
+              statusCategory="additive"
+              thumb={Images.AdditiveIcon}
+            />
+          </View>
+        </View>
+        <View style={styles.alternativeContainer}>
+          <View style={styles.alternativeHeader}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image
+                source={Images.hamburger}
+                style={styles.hamburgerIcon}
+              />
+              <Text style={styles.alternativeHeaderTitle}>
+                Product Alternatives
+                  </Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.viewAllTitle}>View all</Text>
+              <Icon
+                name="keyboard-arrow-right"
+                color={Colors.primary}
+                size={scaleH(18)}
+              />
+            </View>
+          </View>
+          <FlatList
+            style={{ height: scaleH(500) }}
+            contentContainerStyle={{
+              paddingTop: scaleH(20),
+              paddingHorizontal: scaleW(5),
+            }}
+            data={alternatives}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item, index }) => (
+              <AlternativeItem data={item} key={item.id} />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      </View>
+    )
+  };
+  renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle} />
+      </View>
+    </View>
+  )
+    console.log(product);
   return (
     <Container>
+      <BottomPanel
+        ref={bottomSheet}
+        initialPosition={0}
+        callbackNode={fall}
+        snapPoints={['0%', '30%', '90%']}
+
+        onOpenStart={() => console.log('onOpenStart', bottomSheet.current)}
+        onOpenEnd={() => console.log('onOpenEnd')}
+        onCloseStart={() => console.log('onCloseStart')}
+        onCloseEnd={() => console.log('onCloseEnd')}
+        renderHeader={renderHeader}
+        renderContent={renderContent}
+
+      />
       <BarcodePicker
         ref={scanner}
         onScan={(session) => handleScan(session)}
         scanSettings={scanSettings}
         style={{ flex: 1 }}
-      />
-      <BottomPanel
-        ref={bottomSheet}
-        bottomSheerColor={Colors.background}
-        containerStyle={{ backgroundColor: Colors.background }}
-        initialPosition={0}
-        snapPoints={['0%', '30%', '100%']}
-        isBackDrop={true}
-        isBackDropDismissByPress={true}
-        isRoundBorderWithTipHeader={true}
-        headerStyle={{ paddingBottom: 0 }}
-        body={
-          <View style={styles.popupContainer}>
-            <View style={styles.popupItemDetailContainer}>
-              <FoodListItem
-                data={{
-                  id: 1,
-                  name: 'Halo Top Ice Cream Pint, MInt Chip',
-                  category: 'Nestle',
-                  score: product.score,
-                  amount: '350',
-                  calory: '120',
-                  time: '8 day ago',
-                  image: { uri: product.image_url },
-                }}
-                noHistory
-              />
-              <View
-                style={{
-                  borderColor: Colors.border,
-                  borderBottomWidth: 1,
-                  paddingVertical: 5,
-                }}
-              />
-              <View style={{ paddingRight: scaleW(10) }}>
-                <DetailItem
-                  key="fatty"
-                  category="Saturated Fat"
-                  value={7}
-                  steps={[0, 2, 4, 7, 10]}
-                  statusCategory="fatty"
-                  thumb={Images.FatIcon}
-                />
-                <DetailItem
-                  key="sugar"
-                  category="Sugar"
-                  value={5}
-                  steps={[0, 2, 4, 7, 10]}
-                  statusCategory="sweet"
-                  thumb={Images.SugarIcon}
-                />
-                <DetailItem
-                  key="additive"
-                  category="Additives"
-                  value={2}
-                  steps={[0, 2, 4, 7, 10]}
-                  statusCategory="additive"
-                  thumb={Images.AdditiveIcon}
-                />
-              </View>
-            </View>
-            <View style={styles.alternativeContainer}>
-              <View style={styles.alternativeHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image
-                    source={Images.hamburger}
-                    style={styles.hamburgerIcon}
-                  />
-                  <Text style={styles.alternativeHeaderTitle}>
-                    Product Alternatives
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.viewAllTitle}>View all</Text>
-                  <Icon
-                    name="keyboard-arrow-right"
-                    color={Colors.primary}
-                    size={scaleH(18)}
-                  />
-                </View>
-              </View>
-              <FlatList
-                style={{ height: scaleH(500) }}
-                contentContainerStyle={{
-                  paddingTop: scaleH(20),
-                  paddingHorizontal: scaleW(5),
-                }}
-                data={alternatives}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item, index }) => (
-                  <AlternativeItem data={item} key={item.id} />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
-          </View>
-        }
       />
     </Container>
   );
