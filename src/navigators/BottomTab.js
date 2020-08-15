@@ -4,10 +4,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AnimatedTabBar from 'curved-bottom-navigation-bar';
 import Favorite from 'screens/private/Favorite';
 import MedicalRecord from 'screens/private/MedicalRecord';
+import Address from 'screens/private/Address';
+import AddAddress from 'screens/private/AddAddress';
+import Cart from 'screens/private/Cart';
 import History from 'screens/private/History';
 import Scan from 'screens/private/Scan';
 import Profile from 'screens/private/Profile';
 import Setting from 'screens/private/Setting';
+import Payment from 'screens/private/Payment';
 import AnimatedIcon from 'components/AnimatedIcon';
 import { Colors } from 'config';
 
@@ -58,6 +62,11 @@ const FavoriteNavigator = () => (
       component={Favorite}
       options={{ headerShown: false }}
     />
+    <FavoriteStack.Screen
+      name="Cart"
+      component={Cart}
+      options={{ headerShown: false }}
+    />
   </FavoriteStack.Navigator>
 );
 
@@ -89,6 +98,21 @@ const SettingNavigator = () => (
     <SettingStack.Screen
       name="Setting"
       component={Setting}
+      options={{ headerShown: false }}
+    />
+    <SettingStack.Screen
+      name="Address"
+      component={Address}
+      options={{ headerShown: false }}
+    />
+    <SettingStack.Screen
+      name="AddAddress"
+      component={AddAddress}
+      options={{ headerShown: false }}
+    />
+    <SettingStack.Screen
+      name="Payment"
+      component={Payment}
       options={{ headerShown: false }}
     />
   </SettingStack.Navigator>

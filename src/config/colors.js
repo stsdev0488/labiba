@@ -4,6 +4,7 @@ export const black = '#000000';
 export const label = '#565658';
 export const lightLabel = '#81868C';
 export const darkLabel = '#272A3F';
+export const formText = '#666B6F';
 export const background = '#F8F8F8';
 export const shadow = '#80828B';
 export const topScore = '#15A767';

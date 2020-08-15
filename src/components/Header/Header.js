@@ -14,7 +14,7 @@ import { Colors, Images } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import styles from './styles';
 
-const Header = ({ navigation, title }) => {
+const Header = ({ navigation, title, right }) => {
   const insets = useSafeAreaInsets();
   return (
     <View
@@ -26,25 +26,36 @@ const Header = ({ navigation, title }) => {
       ]}
     >
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" color={Colors.label} size={scaleH(32)} />
-        </TouchableOpacity>
+        <View style={styles.left}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon name="chevron-left" color={Colors.label} size={scaleH(32)} />
+            </TouchableOpacity>
+          </View>
+        </View>
         <Text style={styles.title}>{title}</Text>
-        <TouchableOpacity>
-          <Image source={Images.NotificationIcon} />
-        </TouchableOpacity>
+        <View style={styles.right}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            {right ? (
+              right
+            ) : (
+              <TouchableOpacity>
+                <Image source={Images.NotificationIcon} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
       </View>
     </View>
   );
 };
 
 Header.defaultProps = {
-  navigation: null,
   title: null,
 };
 
 Header.propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.any),
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   title: PropTypes.string,
 };
 

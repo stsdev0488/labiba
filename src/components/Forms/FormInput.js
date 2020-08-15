@@ -13,6 +13,7 @@ const FormInput = ({
   keyboardType,
   name,
   placeholder,
+  placeholderTextColor,
   ...rest
 }) => (
   <View>
@@ -20,12 +21,13 @@ const FormInput = ({
       {...rest}
       leftIconContainerStyle={Styles.formLeftIconContainer}
       keyboardType={keyboardType}
-      placeholderTextColor={Colors.placeholderText}
+      placeholderTextColor={placeholderTextColor || Colors.placeholderText}
       name={name}
       placeholder={placeholder}
       style={styles.input}
       containerStyle={styles.containerStyle}
       errorStyle={styles.errorStyle}
+      labelStyle={styles.labelStyle}
     />
   </View>
 );
@@ -44,6 +46,13 @@ const styles = StyleSheet.create({
   containerStyle: {
     paddingHorizontal: 0,
     marginBottom: scaleH(4),
+  },
+  labelStyle: {
+    fontSize: scaleH(14),
+    fontWeight: '300',
+    lineHeight: scaleH(24),
+    color: Colors.darkLabel,
+    marginBottom: scaleH(5),
   },
 });
 

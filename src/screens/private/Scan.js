@@ -16,10 +16,11 @@ import FoodListItem from 'components/History/FoodListItem';
 import DetailItem from 'components/Product/DetailItem';
 import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
-import AlternativeItem from 'components/Product/AlternativeItem';
+import ProductItem from 'components/Product/ProductItem';
 import * as ProductService from 'services/productService';
 import { getProduct } from 'services/apis/product';
 import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
+import ProductSection from 'components/Product/ProductSection';
 
 const data = {
   id: 4,
@@ -237,42 +238,11 @@ const Scan = ({ navigation }) => {
                 />
               </View>
             </View>
-            <View style={styles.alternativeContainer}>
-              <View style={styles.alternativeHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image
-                    source={Images.hamburger}
-                    style={styles.hamburgerIcon}
-                  />
-                  <Text style={styles.alternativeHeaderTitle}>
-                    Product Alternatives
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.viewAllTitle}>View all</Text>
-                  <Icon
-                    name="keyboard-arrow-right"
-                    color={Colors.primary}
-                    size={scaleH(18)}
-                  />
-                </View>
-              </View>
-              <FlatList
-                style={{ height: scaleH(500) }}
-                contentContainerStyle={{
-                  paddingTop: scaleH(20),
-                  paddingHorizontal: scaleW(5),
-                }}
-                data={alternatives}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item, index }) => (
-                  <AlternativeItem data={item} key={item.id} />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
+            <ProductSection
+              products={alternatives}
+              productCategory="Product Alternatives"
+              productAction="View all"
+            />
           </View>
         }
       />
