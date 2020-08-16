@@ -15,7 +15,13 @@ const styles = StyleSheet.create({
 const SafeAreaContainer = ({ children, style }) => {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: insets.top }, style]}>
+    <View
+      style={[
+        styles.container,
+        { paddingTop: insets.top, paddingBottom: insets.bottom },
+        style,
+      ]}
+    >
       {children}
     </View>
   );

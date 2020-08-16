@@ -188,5 +188,8 @@ export const ProductSchema = {
     nutrition_score_beverage: 'int?',
     score: 'float?',
     image_url: 'string?',
+    brands: 'string?',
+    product_name: 'string?',
+    favorite: 'string?[]',
   },
 };

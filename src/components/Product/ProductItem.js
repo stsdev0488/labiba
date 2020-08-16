@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { scaleH, scaleW } from 'utils/scale';
@@ -40,8 +41,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: scaleH(10),
   },
-  image: {
+  imageContainer: {
     height: scaleH(80),
+    width: scaleH(80),
+    borderRadius: scaleH(10),
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   name: {
@@ -54,7 +62,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProductItem = ({ data, product }) => {
+const ProductItem = ({ data, product, onRemoveFavorite }) => {
   const [favorite, setFavorite] = useState(false);
   const toggleFavorite = () => setFavorite(!favorite);
 
@@ -63,7 +71,7 @@ const ProductItem = ({ data, product }) => {
       <View style={styles.header}>
         <Score score={data.score} small />
         {product ? (
-          <TrashButton />
+          <TrashButton onPress={onRemoveFavorite} />
         ) : (
           <TouchableWithoutFeedback onPress={toggleFavorite}>
             {favorite ? (
@@ -79,8 +87,16 @@ const ProductItem = ({ data, product }) => {
         )}
       </View>
       <View style={styles.content}>
-        <Image source={data.image} style={styles.image} />
-        <Text style={styles.name}>{data.name}</Text>
+        <View style={styles.imageContainer}>
+          {data.image_url?.includes('.svg') ? (
+            <SvgUri uri={data.image_url} width="100%" height="100%" />
+          ) : (
+            <Image source={{ uri: data.image_url }} style={styles.image} />
+          )}
+        </View>
+        <Text style={styles.name} numberOfLines={2}>
+          {data.product_name}
+        </Text>
       </View>
     </TouchableOpacity>
   );

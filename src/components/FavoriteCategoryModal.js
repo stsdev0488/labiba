@@ -1,7 +1,15 @@
-import React, { useRef, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import ViewPager from '@react-native-community/viewpager';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { scaleH, scaleW } from 'utils/scale';
 import { Colors, Images, Styles } from 'config';
@@ -63,9 +71,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ListItem = ({ text, checked }) => {
+const ListItem = ({ text, checked, onPress }) => {
   return (
-    <TouchableOpacity style={styles.listItemContainer}>
+    <TouchableOpacity style={styles.listItemContainer} onPress={onPress}>
       <Text style={styles.listItemText}>{text}</Text>
       {checked ? (
         <Icon name="check-circle" size={scaleH(23)} color={Colors.primary} />
@@ -73,15 +81,33 @@ const ListItem = ({ text, checked }) => {
         <Icon
           name="checkbox-blank-circle-outline"
           size={scaleH(23)}
-          color="989FAA"
+          color="#989FAA"
         />
       )}
     </TouchableOpacity>
   );
 };
 
-const FavoriteCategoryModal = ({ visible, closeModal }) => {
+const FavoriteCategoryModal = ({
+  visible,
+  closeModal,
+  categories,
+  selectedFavoriteCategory,
+  onItemPress,
+  newFavoriteItem,
+  setNewFavoriteItem,
+  onCreateNewItem,
+  creatingNewItem,
+  onAddToList,
+}) => {
   const viewPager = useRef(null);
+
+  useEffect(() => {
+    if (!creatingNewItem && viewPager && viewPager.current) {
+      viewPager.current.setPage(0);
+    }
+  }, [creatingNewItem, viewPager]);
+
   return (
     <Modal
       isVisible={visible}
@@ -103,12 +129,20 @@ const FavoriteCategoryModal = ({ visible, closeModal }) => {
           scrollEnabled={false}
         >
           <View key={1} style={styles.pagerView}>
-            <View>
-              <ListItem checked={true} text="Weekend List" />
-              <ListItem checked={true} text="Healthy List" />
-              <ListItem checked={true} text="Favorite List" />
-              <ListItem checked={true} text="Other List" />
-            </View>
+            <ScrollView>
+              <View>
+                {categories.map((item, index) => (
+                  <ListItem
+                    key={index}
+                    checked={selectedFavoriteCategory
+                      .map((item) => item.id)
+                      .includes(item.id)}
+                    text={item.name}
+                    onPress={() => onItemPress(item)}
+                  />
+                ))}
+              </View>
+            </ScrollView>
             <View style={{ flexDirection: 'row', marginTop: scaleH(10) }}>
               <View style={{ flex: 1 }}>
                 <FormButton
@@ -118,7 +152,7 @@ const FavoriteCategoryModal = ({ visible, closeModal }) => {
                     shadowColor: '#29C17E',
                   }}
                   titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
-                  onPress={closeModal}
+                  onPress={onAddToList}
                   title="Done"
                 />
               </View>
@@ -139,6 +173,7 @@ const FavoriteCategoryModal = ({ visible, closeModal }) => {
             </View>
           </View>
           <View key={2} style={styles.pagerView}>
+            <Spinner visible={creatingNewItem} />
             <FormInput
               label="Category Name"
               inputContainerStyle={{
@@ -148,10 +183,8 @@ const FavoriteCategoryModal = ({ visible, closeModal }) => {
               }}
               inputStyle={{ ...Styles.formInputStyle, color: Colors.label }}
               name="CategoryName"
-              placeholder="Category Name"
-              placeholderTextColor={Colors.label}
-              // value={values.fullname}
-              // onChangeText={handleChange('fullname')}
+              value={newFavoriteItem}
+              onChangeText={(text) => setNewFavoriteItem(text)}
               // onBlur={handleBlur('fullname')}
             />
             <View style={{ flexDirection: 'row', marginTop: scaleH(10) }}>
@@ -163,7 +196,7 @@ const FavoriteCategoryModal = ({ visible, closeModal }) => {
                     shadowColor: '#29C17E',
                   }}
                   titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
-                  onPress={closeModal}
+                  onPress={onCreateNewItem}
                   title="Save"
                 />
               </View>

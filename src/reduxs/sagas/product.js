@@ -5,12 +5,12 @@ import {
   GET_PRODUCT_SUCCESS,
   GET_PRODUCT_ERROR,
 } from 'reduxs/actions/product';
-import ApiHandler from 'services/apis';
+import { productApi } from 'services/apis';
 
 function* getProduct(action) {
   try {
     yield put({ type: GET_PRODUCT_REQUEST });
-    const response = yield call(ApiHandler.product.getProduct, action.payload);
+    const response = yield call(productApi.getProduct, action.payload);
     if (response.status === 200) {
       yield put({ type: GET_PRODUCT_SUCCESS, payload: response.data });
     }

@@ -42,13 +42,14 @@ const ProductSection = ({
   productAction,
   productActionPress,
   product,
+  onRemoveFavorite,
 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image source={Images.hamburger} style={styles.hamburgerIcon} />
-          <Text style={styles.headerTitle}>{productCategory}</Text>
+          <Text style={styles.headerTitle}>{productCategory.name}</Text>
         </View>
         <TouchableOpacity
           onPress={productActionPress}
@@ -76,7 +77,13 @@ const ProductSection = ({
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <ProductItem data={item} key={item.id} product={product} />
+          <ProductItem
+            data={item}
+            product={product}
+            onRemoveFavorite={() =>
+              onRemoveFavorite(item.code, productCategory.id)
+            }
+          />
         )}
         keyExtractor={(item, index) => index.toString()}
       />

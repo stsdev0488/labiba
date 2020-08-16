@@ -1,9 +1,17 @@
 import * as auth from './auth.js';
-import * as product from './product';
-import * as coupon from './coupon';
-import * as discount from './discount';
-import * as favorite from './favoriteList';
-import * as fee from './fee';
-import * as order from './order';
+import * as productApi from './product';
+import * as couponApi from './coupon';
+import * as discountApi from './discount';
+import * as favoriteApi from './favoriteList';
+import * as feeApi from './fee';
+import * as orderApi from './order';
 
-export default { auth, product, coupon, discount, favorite, fee, order };
+export {
+  auth,
+  productApi,
+  couponApi,
+  discountApi,
+  favoriteApi,
+  feeApi,
+  orderApi,
+};

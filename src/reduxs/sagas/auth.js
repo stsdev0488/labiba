@@ -10,12 +10,12 @@ import {
   AUTH_REGISTER_SUCCESS,
   AUTH_REGISTER_ERROR,
 } from '../actions/auth';
-import ApiHandler from 'services/apis';
+import { auth } from 'services/apis';
 
 function* login(action) {
   try {
     yield put({ type: AUTH_LOGIN_REQUEST });
-    const response = yield call(ApiHandler.auth.login, action.payload);
+    const response = yield call(auth.login, action.payload);
     if (response.status === 200) {
       yield put({ type: AUTH_LOGIN_SUCCESS, payload: response.data });
     } else {
@@ -32,7 +32,7 @@ function* login(action) {
 function* register(action) {
   try {
     yield put({ type: AUTH_REGISTER_REQUEST });
-    const response = yield call(ApiHandler.auth.register, action.payload);
+    const response = yield call(auth.register, action.payload);
     if (response.status === 200 || response.status === 201) {
       AsyncStorage.setItem('user', JSON.stringify(response.data));
       yield put({ type: AUTH_REGISTER_SUCCESS, payload: response.data });

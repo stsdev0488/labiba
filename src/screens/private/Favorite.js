@@ -1,55 +1,21 @@
-import React, { useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { ButtonGroup } from 'react-native-elements';
 import CartListItem from 'components/Cart/CartListItem';
 import Container from 'components/Container';
 import Header from 'components/Header/Header';
 import ProductSection from 'components/Product/ProductSection';
 import { Colors, Images } from 'config';
+import * as ProductService from 'services/productService';
 import { scaleH, scaleW } from 'utils/scale';
-
-const data = [
-  {
-    id: 1,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 9.5,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food1,
-  },
-  {
-    id: 2,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 7.3,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food2,
-  },
-  {
-    id: 3,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 7.5,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food3,
-  },
-  {
-    id: 4,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 8.3,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food4,
-  },
-];
+import { useIsFocused } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   tabContainer: {
@@ -64,37 +30,65 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginTop: scaleH(-3),
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const Favorite = ({ navigation }) => {
+  const { favoriteList } = useSelector((state) => state.favoriteList);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getAllProducts = async () => {
+    setLoading(true);
+    const products = await ProductService.getAllProducts();
+    setAllProducts(products);
+    setLoading(false);
+  };
+
+  const handleRemoveFavorite = async (code, favoriteId) => {
+    await ProductService.removeFromFavoriteList(code, favoriteId);
+    getAllProducts();
+  };
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllProducts();
+    }
+  }, [isFocused]);
 
   const renderFavorite = () => {
-    return (
-      <View>
-        <ProductSection
-          product
-          products={data}
-          productCategory="Daily List"
-          productAction="Buy Now"
-          productActionPress={() => navigation.navigate('Cart')}
-        />
-        <ProductSection
-          product
-          products={data}
-          productCategory="Party List"
-          productAction="Buy Now"
-          productActionPress={() => navigation.navigate('Cart')}
-        />
-        <ProductSection
-          product
-          products={[]}
-          productCategory="Kids Snacks List"
-          productAction="Buy Now"
-          productActionPress={() => navigation.navigate('Cart')}
-        />
-      </View>
-    );
+    if (loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator />
+        </View>
+      );
+    } else {
+      return (
+        <ScrollView contentContainerStyle={{ paddingBottom: scaleH(100) }}>
+          {favoriteList.data?.map((item, index) => (
+            <ProductSection
+              key={index}
+              product
+              products={Array.from(allProducts).filter((product) =>
+                Array.from(product.favorite).includes(item.id),
+              )}
+              productCategory={item}
+              productAction="Buy Now"
+              productActionPress={() => navigation.navigate('Cart')}
+              onRemoveFavorite={handleRemoveFavorite}
+            />
+          ))}
+        </ScrollView>
+      );
+    }
   };
 
   const renderCart = () => {

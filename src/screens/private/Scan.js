@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import BottomPanel from 'react-native-bottomsheet-reanimated';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {
   BarcodePicker,
   ScanditModule,
@@ -18,54 +20,13 @@ import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import ProductItem from 'components/Product/ProductItem';
 import * as ProductService from 'services/productService';
-import { getProduct } from 'services/apis/product';
+import { productApi } from 'services/apis';
 import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
 import ProductSection from 'components/Product/ProductSection';
-import CartSummaryModal from "components/CartSummaryModal";
+import CartSummaryModal from 'components/CartSummaryModal';
+import { FavoriteActions } from 'reduxs/actions';
 
-const data = {
-  id: 4,
-  name: 'Quality Street Chocolates & Toffees',
-  category: 'Nestle',
-  score: 8.3,
-  amount: '350',
-  calory: '120',
-  time: '8 day ago',
-  image: Images.Food4,
-};
-
-const alternatives = [
-  {
-    id: 1,
-    name: 'Halo Top Ice Cream Pint, MInt Chip',
-    category: 'Nestle',
-    score: 9.5,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.alternative1,
-  },
-  {
-    id: 2,
-    name: 'Halo Top Ice Cream Pint, MInt Chip',
-    category: 'Nestle',
-    score: 7.3,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.alternative2,
-  },
-  {
-    id: 3,
-    name: 'Halo Top Ice Cream Pint, MInt Chip',
-    category: 'Nestle',
-    score: 7.5,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.alternative3,
-  },
-];
+const alternatives = [];
 
 const styles = StyleSheet.create({
   popupContainer: {
@@ -120,10 +81,14 @@ scanSettings.setSymbologyEnabled(Barcode.Symbology.UPCA, true);
 scanSettings.codeDuplicateFilter = 3000;
 
 const Scan = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { favoriteList, create } = useSelector((state) => state.favoriteList);
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
   const [favoriteCategoryVisible, setFavoriteCategoryVisible] = useState(false);
   const [cartSummaryVisible, setCartSummaryVisible] = useState(false);
+  const [selectedFavoriteCategory, setSelectedFavoriteCategory] = useState([]);
+  const [newFavoriteItem, setNewFavoriteItem] = useState('');
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
 
@@ -132,11 +97,13 @@ const Scan = ({ navigation }) => {
     const products = await ProductService.findProduct(code);
     console.log('local products ', products.length);
     if (!products.length) {
-      getProduct(code)
+      productApi
+        .getProduct(code)
         .then((response) => {
           if (response.data.product.code) {
             console.log('online product ', response.data.product);
             ProductService.saveProduct(response.data.product);
+            setProduct(response.data.product);
             bottomSheet.current.snapTo(1);
           } else {
             showMessage({
@@ -158,6 +125,30 @@ const Scan = ({ navigation }) => {
     }
   };
 
+  const handleCreateFavoriteItem = () => {
+    if (!newFavoriteItem) {
+      showMessage({
+        type: 'danger',
+        message: 'Please input category name',
+      });
+    } else {
+      dispatch(FavoriteActions.createFavoriteItem({ name: newFavoriteItem }));
+      setNewFavoriteItem('');
+    }
+  };
+
+  const handleFavoriteItemPress = (item) => {
+    setSelectedFavoriteCategory([...selectedFavoriteCategory, item]);
+  };
+
+  const handleAddToList = async () => {
+    await ProductService.addToFavoriteList(
+      product.code,
+      selectedFavoriteCategory.map((item) => item.id),
+    );
+    setFavoriteCategoryVisible(false);
+  };
+
   const handleAddFavorite = () => {
     bottomSheet.current.snapTo(0);
     setFavoriteCategoryVisible(true);
@@ -171,8 +162,13 @@ const Scan = ({ navigation }) => {
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    dispatch(FavoriteActions.getFavoriteList());
+  }, []);
+
   return (
     <Container>
+      <Spinner visible={favoriteList.loading || false} />
       <BarcodePicker
         ref={scanner}
         onScan={(session) => handleScan(session)}
@@ -183,8 +179,8 @@ const Scan = ({ navigation }) => {
         ref={bottomSheet}
         bottomSheerColor={Colors.background}
         containerStyle={{ backgroundColor: Colors.background }}
-        initialPosition={300}
-        snapPoints={['0%', '30%', '100%']}
+        initialPosition={0}
+        snapPoints={['0%', '33%', '100%']}
         isBackDrop={true}
         isBackDropDismissByPress={true}
         isRoundBorderWithTipHeader={true}
@@ -195,13 +191,14 @@ const Scan = ({ navigation }) => {
               <FoodListItem
                 data={{
                   id: 1,
-                  name: 'Halo Top Ice Cream Pint, MInt Chip',
-                  category: 'Nestle',
+                  name: product.product_name,
+                  category: product.brands,
                   score: product.score,
                   amount: '350',
                   calory: '120',
                   time: '8 day ago',
-                  image: { uri: product.image_url },
+                  image: product.image_url,
+                  favorite: product.favorite,
                 }}
                 noHistory
                 handleAddFavorite={handleAddFavorite}
@@ -251,6 +248,14 @@ const Scan = ({ navigation }) => {
       <FavoriteCategoryModal
         visible={favoriteCategoryVisible}
         closeModal={() => setFavoriteCategoryVisible(false)}
+        categories={favoriteList.data || []}
+        selectedFavoriteCategory={selectedFavoriteCategory}
+        onItemPress={handleFavoriteItemPress}
+        newFavoriteItem={newFavoriteItem}
+        setNewFavoriteItem={setNewFavoriteItem}
+        onCreateNewItem={handleCreateFavoriteItem}
+        creatingNewItem={create.loading}
+        onAddToList={handleAddToList}
       />
       <CartSummaryModal
         visible={cartSummaryVisible}
