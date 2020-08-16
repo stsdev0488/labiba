@@ -48,19 +48,51 @@ const data = [
     image: Images.Food4,
   },
 ];
+import * as ProductService from 'services/productService';
 
-const History = ({ navigation }) => {
-  return (
-    <Container>
-      <Header navigation={navigation} title="History" />
-      <FlatList
-        contentContainerStyle={{ padding: scaleW(10) }}
-        style={{ flex: 1 }}
-        data={data}
-        renderItem={({ item }) => <FoodListItem key={item.id} data={item} />}
-      />
-    </Container>
-  );
-};
+export default class History extends React.Component {
 
-export default History;
+  constructor(props) {
+    super(props)
+    this.state = {
+      products: [],
+    };
+  }
+
+  async componentDidMount() {
+     const products = await ProductService.findAllProducts();
+
+     this.setState({
+      products: products
+     });
+     console.log('products', productsAsArray);
+  }
+
+
+  render() {
+    const {navigation} = this.props;
+    return (
+      <Container>
+        <Header navigation={navigation} title="History" />
+        <FlatList
+          contentContainerStyle={{ padding: scaleW(10) }}
+          style={{ flex: 1 }}
+          data={this.state.products}
+          keyExtractor={ (item, index) => index.toString()}
+          renderItem={({item}) => <FoodListItem 
+          key={item.code} 
+          data={{
+            id: item.code,
+            name: item.product_name,
+            category: item.brands,
+            score: item.score,
+            amount: item.serving_size,
+            calory: item.nutriments && item.nutriments['energy-kcal_serving'],
+            image: item.image_url,
+            time: 'momnet age'
+          }} />}
+        />
+      </Container>
+    );
+  }
+}
