@@ -21,6 +21,7 @@ import * as ProductService from 'services/productService';
 import { getProduct } from 'services/apis/product';
 import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
 import ProductSection from 'components/Product/ProductSection';
+import CartSummaryModal from "components/CartSummaryModal";
 
 const data = {
   id: 4,
@@ -122,6 +123,7 @@ const Scan = ({ navigation }) => {
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
   const [favoriteCategoryVisible, setFavoriteCategoryVisible] = useState(false);
+  const [cartSummaryVisible, setCartSummaryVisible] = useState(false);
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
 
@@ -249,6 +251,10 @@ const Scan = ({ navigation }) => {
       <FavoriteCategoryModal
         visible={favoriteCategoryVisible}
         closeModal={() => setFavoriteCategoryVisible(false)}
+      />
+      <CartSummaryModal
+        visible={cartSummaryVisible}
+        closeModal={() => setCartSummaryVisible(false)}
       />
     </Container>
   );

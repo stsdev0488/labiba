@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowColor: Colors.shadow,
     shadowOpacity: 0.2,
+    elevation: 4,
   },
   totalPriceText: {
     fontSize: scaleH(13),

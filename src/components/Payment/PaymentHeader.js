@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowColor: Colors.shadow,
     shadowOpacity: 0.2,
-    zIndex: 10000,
+    elevation: 4
   },
   row: {
     flexDirection: 'row',
@@ -55,7 +55,7 @@ const PaymentHeader = ({ onAddPayment }) => {
         <Text style={styles.deliveryAddress}>Credit/Debit Cards</Text>
         <TouchableOpacity onPress={onAddPayment}>
           <Text style={[styles.deliveryAddress, { color: Colors.primary }]}>
-            ADD NEW Card
+            ADD NEW CARD
           </Text>
         </TouchableOpacity>
       </View>

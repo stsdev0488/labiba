@@ -12,6 +12,7 @@ import Scan from 'screens/private/Scan';
 import Profile from 'screens/private/Profile';
 import Setting from 'screens/private/Setting';
 import Payment from 'screens/private/Payment';
+import AddCard from 'screens/private/AddCard';
 import AnimatedIcon from 'components/AnimatedIcon';
 import { Colors } from 'config';
 
@@ -113,6 +114,11 @@ const SettingNavigator = () => (
     <SettingStack.Screen
       name="Payment"
       component={Payment}
+      options={{ headerShown: false }}
+    />
+    <SettingStack.Screen
+      name="AddCard"
+      component={AddCard}
       options={{ headerShown: false }}
     />
   </SettingStack.Navigator>

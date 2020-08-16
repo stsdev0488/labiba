@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowColor: Colors.shadow,
     shadowOpacity: 0.2,
-    zIndex: 10000,
+    elevation: 4,
   },
   row: {
     flexDirection: 'row',

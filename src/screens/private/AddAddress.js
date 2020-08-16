@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingHorizontal: scaleW(20),
-    paddingTop: scaleH(10),
+    paddingTop: scaleH(20),
   },
   formButton: {
     height: scaleH(45),
@@ -244,8 +244,6 @@ const AddAddress = ({ navigation }) => {
                       buttonStyle={{
                         ...Styles.formButton,
                         ...styles.formButton,
-                        height: scaleH(45),
-                        shadowColor: '#29C17E',
                       }}
                       titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
                       // onPress={closeModal}

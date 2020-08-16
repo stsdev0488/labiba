@@ -27,7 +27,7 @@ const FormInput = ({
       style={styles.input}
       containerStyle={styles.containerStyle}
       errorStyle={styles.errorStyle}
-      labelStyle={styles.labelStyle}
+      labelStyle={Styles.labelStyle}
     />
   </View>
 );
@@ -46,13 +46,6 @@ const styles = StyleSheet.create({
   containerStyle: {
     paddingHorizontal: 0,
     marginBottom: scaleH(4),
-  },
-  labelStyle: {
-    fontSize: scaleH(14),
-    fontWeight: '300',
-    lineHeight: scaleH(24),
-    color: Colors.darkLabel,
-    marginBottom: scaleH(5),
   },
 });
 

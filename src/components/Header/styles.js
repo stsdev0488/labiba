@@ -11,7 +11,7 @@ export default StyleSheet.create({
     },
     shadowColor: '#2F3432',
     shadowOpacity: 0.1,
-    elevation: scaleH(4),
+    elevation: 3,
     zIndex: 9999,
   },
   header: {

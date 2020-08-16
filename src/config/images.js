@@ -33,3 +33,5 @@ export const creditCardIcon = require('assets/images/creditCard/credit-card.png'
 export const visa = require('assets/images/visa/visa.png');
 export const masterCard = require('assets/images/masterCard/masterCard.png');
 export const paypal = require('assets/images/paypal/paypal.png');
+export const card = require('assets/images/card/card.png');
+export const cart = require('assets/images/cart/cart.png');
