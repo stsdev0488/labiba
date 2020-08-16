@@ -102,7 +102,7 @@ scanSettings.codeDuplicateFilter = 3000;
 const Scan = ({ navigation }) => {
 
   const dispatch = useDispatch();
-  
+
   const { favoriteList, create } = useSelector((state) => state.favoriteList);
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
@@ -185,6 +185,7 @@ const Scan = ({ navigation }) => {
   };
 
   const handleAddFavorite = () => {
+    console.log('handleAddFavorite')
     //bottomSheet.current.snapTo(0);
     setFavoriteCategoryVisible(true);
   };
@@ -212,12 +213,15 @@ const Scan = ({ navigation }) => {
         <View style={styles.popupItemDetailContainer}>
           <FoodListItem
             data={{
+              id: 1,
               name: product.product_name,
               category: product.brands,
               score: product.score,
               amount: '350',
-              calory: energy,
+              calory: '120',
+              time: '8 day ago',
               image: product.image_url,
+              favorite: product.favorite,
             }}
             noHistory
             handleAddFavorite={handleAddFavorite}
@@ -256,42 +260,11 @@ const Scan = ({ navigation }) => {
             />
           </View>
         </View>
-        <View style={styles.alternativeContainer}>
-          <View style={styles.alternativeHeader}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image
-                source={Images.hamburger}
-                style={styles.hamburgerIcon}
-              />
-              <Text style={styles.alternativeHeaderTitle}>
-                Product Alternatives
-                  </Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.viewAllTitle}>View all</Text>
-              <Icon
-                name="keyboard-arrow-right"
-                color={Colors.primary}
-                size={scaleH(18)}
-              />
-            </View>
-          </View>
-          <FlatList
-            style={{ height: scaleH(500) }}
-            contentContainerStyle={{
-              paddingTop: scaleH(20),
-              paddingHorizontal: scaleW(5),
-            }}
-            data={alternatives}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item, index }) => (
-              <AlternativeItem data={item} key={item.id} />
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
+        <ProductSection
+          products={productAlternatives}
+          productCategory="Product Alternatives"
+          productAction="View all"
+        />
       </View>
     )
   };
@@ -304,23 +277,25 @@ const Scan = ({ navigation }) => {
   )
 
   const onOpenStart = () => {
+    console.log('onOpenStart')
     scanner.current.pauseScanning();
 
     if (product && product.code) {
+      console.log('lookinf for product alternatives');
       setProductAlternativesLoading(true);
       getProductAlternatives(product.code)
         .then((response) => {
+          console.log('product alternatives response : ', response.data.products);
           if (response.data.products) {
             setProductAlternatives(response.data.products);
           }
         })
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => {
           setProductAlternativesLoading(false);
         });
     }
   }
-  console.log(product);
   return (
     <Container>
       <Spinner
@@ -334,7 +309,7 @@ const Scan = ({ navigation }) => {
         callbackNode={fall}
         snapPoints={['0%', '30%', '90%']}
 
-        onOpenStart={() => onOpenStart}
+        onOpenStart={onOpenStart}
         onOpenEnd={() => console.log('onOpenEnd')}
         onCloseStart={() => console.log('onCloseStart')}
         onCloseEnd={() => scanner.current.resumeScanning()}

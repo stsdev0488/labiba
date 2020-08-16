@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 });
 
 const FoodListItem = ({ data, onPress, noHistory, handleAddFavorite }) => {
-  console.log('data ', data);
+  console.log('FoodListItem.data ', data);
   return (
     <TouchableOpacity
       style={
@@ -105,13 +105,14 @@ const FoodListItem = ({ data, onPress, noHistory, handleAddFavorite }) => {
           {!noHistory ? (
             <Time time={data.time} />
           ) : data.favorite?.length ? (
-            // <TouchableOpacity onPress={handleAddFavorite}>
-            <Icon
-              name="heart"
-              color={Colors.primary}
-              size={scaleH(22)}
-              style={{ marginRight: scaleW(10) }}
-            />
+            <TouchableOpacity onPress={handleAddFavorite}>
+              <Icon
+                name="heart"
+                color={Colors.primary}
+                size={scaleH(22)}
+                style={{ marginRight: scaleW(10) }}
+              />
+            </TouchableOpacity>
           ) : (
             // </TouchableOpacity>
             <TouchableOpacity onPress={handleAddFavorite}>
