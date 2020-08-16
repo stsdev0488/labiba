@@ -91,7 +91,6 @@ const FoodListItem = ({
         </View>
         <View style={styles.detailContent}>
           <View style={{ flexDirection: 'row' }}>
-            <Amount amount={data.amount} />
             <View style={{ marginLeft: scaleW(5) }}>
               <Calory amount={data.calory} />
             </View>

@@ -19,8 +19,9 @@ import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import AlternativeItem from 'components/Product/AlternativeItem';
 import * as ProductService from 'services/productService';
-import { getProduct } from 'services/apis/product';
+import { getProduct, getProductAlternatives } from 'services/apis/product';
 import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const data = {
   id: 4,
@@ -136,22 +137,32 @@ scanSettings.setSymbologyEnabled(Barcode.Symbology.UPCA, true);
 scanSettings.codeDuplicateFilter = 3000;
 
 const Scan = ({ navigation }) => {
-  const [, setFocused] = useState();
   const [product, setProduct] = useState({});
+  const [productAlternatives, setProductAlternatives] = useState([]);
   const [favoriteCategoryVisible, setFavoriteCategoryVisible] = useState(false);
+  const [isProductLoading, setProductLoading] = useState(false);
+  const [isProductAlternativesLoading, setProductAlternativesLoading] = useState(false);
+
+
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
   let fall = new Animated.Value(1)
+
+  /***** methods *****/
   const handleScan = async (session) => {
+    setProductLoading(true);
+    scanner.current.pauseScanning();
+
     const code = session.newlyRecognizedCodes[0].data;
     const products = await ProductService.findProduct(code);
-    console.log('local products ', products.length);
     if (!products.length) {
+      console.log('product not found locally')
       getProduct(code)
         .then((response) => {
           if (response.data.product.code) {
             console.log('online product ', response.data.product);
             ProductService.saveProduct(response.data.product);
+            setProduct(response.data.product);
             bottomSheet.current.snapTo(1);
           } else {
             showMessage({
@@ -164,17 +175,22 @@ const Scan = ({ navigation }) => {
           showMessage({
             type: 'danger',
             message: 'Get product info failed!',
-          });
+          })
+          scanner.current.resumeScanning();
+        })
+        .finally(() => {
+          setProductLoading(false);
         });
     } else {
-      console.log('local product ', products[0]);
+      console.log('product found locally',);
       setProduct(products[0]);
       bottomSheet.current.snapTo(1);
+      setProductLoading(false);
     }
   };
 
   const handleAddFavorite = () => {
-    bottomSheet.current.snapTo(0);
+    //bottomSheet.current.snapTo(0);
     setFavoriteCategoryVisible(true);
   };
 
@@ -281,26 +297,50 @@ const Scan = ({ navigation }) => {
       </View>
     )
   };
-  renderHeader = () => (
+  const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHeader}>
         <View style={styles.panelHandle} />
       </View>
     </View>
   )
+
+  const onOpenStart = () => {
+    scanner.current.pauseScanning();
+
+    if (product && product.code) {
+      setProductAlternativesLoading(true);
+      getProductAlternatives(product.code)
+        .then((response) => {
+          if (response.data.products) {
+            setProductAlternatives(response.data.products);
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          setProductAlternativesLoading(false);
+        });
+    }
+  }
+
   console.log(product);
   return (
     <Container>
+      <Spinner
+        textContent={'Loading...'}
+        visible={isProductLoading}
+        textStyle={{ color: Colors.white }}
+      />
       <BottomPanel
         ref={bottomSheet}
         initialPosition={0}
         callbackNode={fall}
         snapPoints={['0%', '30%', '90%']}
 
-        onOpenStart={() => console.log('onOpenStart', bottomSheet.current)}
+        onOpenStart={() => onOpenStart}
         onOpenEnd={() => console.log('onOpenEnd')}
         onCloseStart={() => console.log('onCloseStart')}
-        onCloseEnd={() => console.log('onCloseEnd')}
+        onCloseEnd={() => scanner.current.resumeScanning()}
         renderHeader={renderHeader}
         renderContent={renderContent}
 
