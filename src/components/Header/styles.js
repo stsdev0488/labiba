@@ -11,11 +11,10 @@ export default StyleSheet.create({
     },
     shadowColor: '#2F3432',
     shadowOpacity: 0.1,
-    elevation: scaleH(4),
+    elevation: 3,
+    zIndex: 9999,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: scaleW(20),
     paddingVertical: scaleH(Platform.OS === 'ios' ? 10 : 13),
@@ -40,5 +39,17 @@ export default StyleSheet.create({
     position: 'absolute',
     top: scaleH(14),
     left: scaleW(30),
+  },
+  left: {
+    position: 'absolute',
+    left: scaleW(15),
+    top: 0,
+    bottom: 0,
+  },
+  right: {
+    position: 'absolute',
+    right: scaleW(15),
+    top: 0,
+    bottom: 0,
   },
 });

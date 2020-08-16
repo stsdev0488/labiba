@@ -85,3 +85,17 @@ export const link = {
   fontWeight: 'bold',
   color: Colors.placeholderText,
 };
+
+export const headerRightText = {
+  fontSize: scaleH(16),
+  color: Colors.primary,
+  fontWeight: '500',
+};
+
+export const labelStyle = {
+  fontSize: scaleH(14),
+  fontWeight: '300',
+  lineHeight: scaleH(24),
+  color: Colors.darkLabel,
+  marginBottom: scaleH(5),
+};

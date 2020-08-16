@@ -33,6 +33,7 @@
     "react-native-fbsdk": "1.1.2",
     "react-native-flash-message": "^0.1.15",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-input-credit-card": "^0.5.5",
     "react-native-iphone-x-helper": "^1.2.1",
     "react-native-keyboard-aware-scrollview": "^2.1.0",
     "react-native-loading-spinner-overlay": "^1.1.0",

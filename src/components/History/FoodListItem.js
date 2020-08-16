@@ -7,13 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Colors, Images } from 'config';
-import { scaleH, scaleW } from 'utils/scale';
+import { SvgUri } from 'react-native-svg';
+import Icon from 'react-native-vector-icons/AntDesign';
 import Score from './Score';
 import Amount from './Amount';
 import Calory from './Calory';
 import Time from 'components/History/Time';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { Colors, Images } from 'config';
+import { scaleH, scaleW } from 'utils/scale';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,10 +32,15 @@ const styles = StyleSheet.create({
     padding: scaleH(10),
     marginVertical: scaleH(5),
   },
-  image: {
+  imageContainer: {
     width: scaleH(85),
     height: scaleH(85),
     borderRadius: scaleH(10),
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   name: {
@@ -64,13 +70,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const FoodListItem = ({
-  data,
-  onPress,
-  noHistory,
-  favorite,
-  handleAddFavorite,
-}) => {
+const FoodListItem = ({ data, onPress, noHistory, handleAddFavorite }) => {
+  console.log('data ', data);
   return (
     <TouchableOpacity
       style={
@@ -80,7 +81,13 @@ const FoodListItem = ({
       }
       onPress={onPress}
     >
-      <Image source={data.image} style={styles.image} />
+      <View style={styles.imageContainer}>
+        {data.image?.includes('.svg') ? (
+          <SvgUri uri={data.image} width="100%" height="100%" />
+        ) : (
+          <Image source={{ uri: data.image }} style={styles.image} />
+        )}
+      </View>
       <View style={styles.content}>
         <View style={styles.nameContent}>
           <View style={{ flex: 1 }}>
@@ -97,16 +104,16 @@ const FoodListItem = ({
           </View>
           {!noHistory ? (
             <Time time={data.time} />
-          ) : favorite ? (
-            <TouchableOpacity onPress={handleAddFavorite}>
-              <Icon
-                name="heart"
-                color={Colors.primary}
-                size={scaleH(22)}
-                style={{ marginRight: scaleW(10) }}
-              />
-            </TouchableOpacity>
+          ) : data.favorite?.length ? (
+            // <TouchableOpacity onPress={handleAddFavorite}>
+            <Icon
+              name="heart"
+              color={Colors.primary}
+              size={scaleH(22)}
+              style={{ marginRight: scaleW(10) }}
+            />
           ) : (
+            // </TouchableOpacity>
             <TouchableOpacity onPress={handleAddFavorite}>
               <Icon
                 name="hearto"

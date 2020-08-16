@@ -180,5 +180,6 @@ export const ProductSchema = {
     score: 'float?',
     image_url: 'string?',
     serving_size: 'string?',
+    favorite: 'string?[]',
   },
 };
