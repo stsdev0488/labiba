@@ -56,7 +56,9 @@ const Payment = ({ navigation }) => {
     if (coupon.data.isValid) {
       setCoupon(coupon.data.discount);
     } else {
+      Alert.alert('Coupon', 'Coupon is invalid', [{ text: 'OK' }]);
       setCoupon(0);
+      setPromoCode('');
     }
   };
 
