@@ -70,7 +70,7 @@ const Payment = ({ navigation }) => {
   };
 
   const handlePreviewOrder = async () => {
-    if (Object.keys(selectedCard).length) {
+    if (selectedCard.id) {
       setLoading(true);
       const discount = await discountApi.getDiscount();
       dispatch(CartActions.setPromotionalDiscount(discount.data));

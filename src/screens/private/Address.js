@@ -43,8 +43,8 @@ const Address = ({ navigation }) => {
     setLoading(false);
   };
 
-  const handleNext = async () => {
-    if (Object.keys(selectedAddress).length) {
+  const handleNext = () => {
+    if (selectedAddress.id) {
       dispatch(CartActions.setOrder({ shipping: { ...selectedAddress } }));
       navigation.navigate('Payment');
     } else {
