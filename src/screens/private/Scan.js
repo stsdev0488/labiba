@@ -185,7 +185,16 @@ const Scan = ({ navigation, route }) => {
   };
 
   const handleFavoriteItemPress = (item) => {
-    setSelectedFavoriteCategory([...selectedFavoriteCategory, item]);
+    if (
+      selectedFavoriteCategory.map((category) => category.id).includes(item.id)
+    ) {
+      const newCategories = selectedFavoriteCategory.filter(
+        (category) => category.id !== item.id,
+      );
+      setSelectedFavoriteCategory([...newCategories]);
+    } else {
+      setSelectedFavoriteCategory([...selectedFavoriteCategory, item]);
+    }
   };
 
   const handleAddToList = async () => {
