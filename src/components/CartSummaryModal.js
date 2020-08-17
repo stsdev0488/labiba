@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   Image,
   StyleSheet,
@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { scaleH, scaleW } from 'utils/scale';
 import { Colors, Images, Styles } from 'config';
 import FormButton from 'components/Forms/FormButton';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 const styles = StyleSheet.create({
   modal: {
@@ -99,94 +100,98 @@ const CartSummaryModal = ({
       onBackdropPress={closeModal}
       style={styles.modal}
     >
-      <View style={styles.modalContent}>
-        <View style={styles.header}>
-          <View style={styles.cartSummaryContainer}>
-            <Image source={Images.cart} />
-            <Text style={styles.headerTitle}>YOUR CART SUMMARY</Text>
-          </View>
-          <TouchableOpacity onPress={closeModal}>
-            <Icon name="close" color={Colors.primary} size={scaleH(25)} />
-          </TouchableOpacity>
-        </View>
-        <View style={{ paddingVertical: scaleH(5) }}>
-          <View style={styles.row}>
-            <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
-              {`Subtotal (${totalCount}items)`}
-            </Text>
-            <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
-              {`Rs. ${subTotal.toFixed(2).toString()}`}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.rowText}>Promotion discounts</Text>
-            <Text style={styles.rowText}>{`Rs. ${promotionalDiscount}`}</Text>
-          </View>
-        </View>
-        <View style={styles.divider} />
-        <View style={{ paddingVertical: scaleH(5) }}>
-          <View style={styles.row}>
-            <Text style={styles.rowText}>Delivery charge(Home delivery)</Text>
-            <Text style={styles.rowText}>{`Rs. ${shippingFee}`}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.rowText}>Add Coupon</Text>
-            <TouchableOpacity onPress={addCoupon}>
-              <TextInput
-                value={promoCode}
-                style={styles.addCoupon}
-                placeholder="ADD COUPON"
-                placeholderTextColor={Colors.primary}
-                onChangeText={(text) => handlePromoCodeChange(text)}
-                onSubmitEditing={addCoupon}
-              />
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flex: 1, justifyContent: 'flex-end' }}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.header}>
+            <View style={styles.cartSummaryContainer}>
+              <Image source={Images.cart} />
+              <Text style={styles.headerTitle}>YOUR CART SUMMARY</Text>
+            </View>
+            <TouchableOpacity onPress={closeModal}>
+              <Icon name="close" color={Colors.primary} size={scaleH(25)} />
             </TouchableOpacity>
           </View>
-        </View>
-        <View style={styles.divider} />
-        <View style={{ ...styles.row, paddingVertical: scaleH(8) }}>
-          <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
-            Est. Total
-          </Text>
-          <Text
-            style={{
-              ...styles.rowText,
-              color: '#2A2A33',
-              fontSize: scaleH(20),
-            }}
-          >
-            {`Rs. ${total.toFixed(2).toString()}`}
-          </Text>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 1 }}>
-            <FormButton
-              buttonStyle={{
-                ...Styles.formButton,
-                ...styles.formButton,
-                backgroundColor: '#B8B7B7',
-                borderColor: '#B8B7B7',
-                shadowColor: '#00C0FB',
-              }}
-              titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
-              onPress={closeModal}
-              title="Cancel"
-            />
+          <View style={{ paddingVertical: scaleH(5) }}>
+            <View style={styles.row}>
+              <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
+                {`Subtotal (${totalCount}items)`}
+              </Text>
+              <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
+                {`Rs. ${subTotal.toFixed(2).toString()}`}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.rowText}>Promotion discounts</Text>
+              <Text style={styles.rowText}>{`Rs. ${promotionalDiscount}`}</Text>
+            </View>
           </View>
-          <View style={{ flex: 1, marginLeft: scaleW(25) }}>
-            <FormButton
-              buttonStyle={{
-                ...Styles.formButton,
-                ...styles.formButton,
-                shadowColor: '#29C17E',
+          <View style={styles.divider} />
+          <View style={{ paddingVertical: scaleH(5) }}>
+            <View style={styles.row}>
+              <Text style={styles.rowText}>Delivery charge(Home delivery)</Text>
+              <Text style={styles.rowText}>{`Rs. ${shippingFee}`}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.rowText}>Add Coupon</Text>
+              <TouchableOpacity onPress={addCoupon}>
+                <TextInput
+                  value={promoCode}
+                  style={styles.addCoupon}
+                  placeholder="ADD COUPON"
+                  placeholderTextColor={Colors.primary}
+                  onChangeText={(text) => handlePromoCodeChange(text)}
+                  onSubmitEditing={addCoupon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.divider} />
+          <View style={{ ...styles.row, paddingVertical: scaleH(8) }}>
+            <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
+              Est. Total
+            </Text>
+            <Text
+              style={{
+                ...styles.rowText,
+                color: '#2A2A33',
+                fontSize: scaleH(20),
               }}
-              titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
-              onPress={handlePay}
-              title="Pay Now"
-            />
+            >
+              {`Rs. ${total.toFixed(2).toString()}`}
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>
+              <FormButton
+                buttonStyle={{
+                  ...Styles.formButton,
+                  ...styles.formButton,
+                  backgroundColor: '#B8B7B7',
+                  borderColor: '#B8B7B7',
+                  shadowColor: '#00C0FB',
+                }}
+                titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
+                onPress={closeModal}
+                title="Cancel"
+              />
+            </View>
+            <View style={{ flex: 1, marginLeft: scaleW(25) }}>
+              <FormButton
+                buttonStyle={{
+                  ...Styles.formButton,
+                  ...styles.formButton,
+                  shadowColor: '#29C17E',
+                }}
+                titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
+                onPress={handlePay}
+                title="Pay Now"
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </Modal>
   );
 };
