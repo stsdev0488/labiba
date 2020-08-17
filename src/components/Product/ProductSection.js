@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
 });
 
 const ProductSection = ({
+  navigation,
   products,
   productCategory,
   productAction,
-  productActionPress,
   product,
   onRemoveFavorite,
 }) => {
@@ -52,7 +52,7 @@ const ProductSection = ({
           <Text style={styles.headerTitle}>{productCategory.name}</Text>
         </View>
         <TouchableOpacity
-          onPress={productActionPress}
+          onPress={() => navigation.navigate('Cart', { items: products })}
           style={{ flexDirection: 'row', alignItems: 'center' }}
         >
           <Text style={styles.viewAllTitle}>{productAction}</Text>

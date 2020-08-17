@@ -1,54 +1,12 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import CartListItem from 'components/Cart/CartListItem';
 import CartHeader from 'components/Cart/CartHeader';
 import Container from 'components/Container';
 import Header from 'components/Header/Header';
 import { Images, Styles } from 'config';
-import { scaleW } from 'utils/scale';
-
-const data = [
-  {
-    id: 1,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 9.5,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food1,
-  },
-  {
-    id: 2,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 7.3,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food2,
-  },
-  {
-    id: 3,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 7.5,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food3,
-  },
-  {
-    id: 4,
-    name: 'Power Beets',
-    category: 'Circulation Superfood',
-    score: 8.3,
-    amount: '350',
-    calory: '120',
-    time: '8 day ago',
-    image: Images.Food4,
-  },
-];
+import { scaleH, scaleW } from 'utils/scale';
+import { productApi } from 'services/apis';
 
 const HeaderRight = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
@@ -56,7 +14,99 @@ const HeaderRight = ({ onPress }) => (
   </TouchableOpacity>
 );
 
-const Cart = ({ navigation }) => {
+const Cart = ({ navigation, route }) => {
+  const [data, setData] = useState([]);
+
+  const handleRemoveFromCart = (code) => {
+    const removedData = data.filter((item) => item.data.code !== code);
+    setData(removedData);
+  };
+
+  const handleMinusCount = (code) => {
+    const newData = data.map((item) => {
+      if (item.data.code !== code) {
+        return item;
+      } else {
+        let count = item.count - 1;
+        if (count < 1) {
+          count = 1;
+        }
+        return {
+          ...item,
+          count,
+        };
+      }
+    });
+    setData(newData);
+  };
+
+  const handlePlusCount = (code) => {
+    const newData = data.map((item) => {
+      if (item.data.code !== code) {
+        return item;
+      } else {
+        return {
+          ...item,
+          count: item.count + 1,
+        };
+      }
+    });
+    setData(newData);
+  };
+
+  const getData = async () => {
+    const { items } = route.params;
+    const { data } = await productApi.getProductPrices(
+      items.map((item) => item.code),
+    );
+    setData(
+      items.map((item) => ({
+        data: item,
+        price: data.products.find((price) => price.code === item.code).price,
+        count: 1,
+      })),
+    );
+  };
+
+  const subTotal = useMemo(() => {
+    if (!data.length) {
+      return '0';
+    } else {
+      let total = 0;
+      data.forEach((item) => (total += item.count * item.price));
+      return `$${total.toFixed(2).toString()}`;
+    }
+  }, [data]);
+
+  const averageScore = useMemo(() => {
+    if (!data.length) {
+      return '0';
+    } else {
+      let totalScore = 0;
+      let totalCount = 0;
+      data.forEach((item) => {
+        totalScore += item.count * item.data.score;
+        totalCount += item.count;
+      });
+
+      return (totalScore / totalCount).toFixed(1).toString();
+    }
+  }, [data]);
+
+  const totalCount = useMemo(() => {
+    if (!data.length) {
+      return '0';
+    } else {
+      let totalCount = 0;
+      data.forEach((item) => (totalCount += item.count));
+      return totalCount.toString();
+    }
+  }, [data]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <Container>
       <Header
@@ -70,12 +120,27 @@ const Cart = ({ navigation }) => {
           />
         }
       />
-      <CartHeader averageScore={8.5} itemCount={5} totalPrice="$1,667.00" />
+      <CartHeader
+        averageScore={averageScore}
+        itemCount={totalCount}
+        totalPrice={subTotal}
+      />
       <FlatList
-        contentContainerStyle={{ padding: scaleW(10) }}
+        contentContainerStyle={{
+          padding: scaleW(10),
+          paddingBottom: scaleH(100),
+        }}
         style={{ flex: 1 }}
         data={data}
-        renderItem={({ item }) => <CartListItem key={item.id} data={item} />}
+        renderItem={({ item }) => (
+          <CartListItem
+            data={item}
+            onRemoveFromCart={() => handleRemoveFromCart(item.data.code)}
+            onMinusCount={() => handleMinusCount(item.data.code)}
+            onPlusCount={() => handlePlusCount(item.data.code)}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
       />
     </Container>
   );

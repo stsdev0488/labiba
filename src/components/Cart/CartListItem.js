@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import TrashButton from 'components/TrashButton';
 import AmountController from 'components/Cart/AmountController';
 import { Colors } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
-import Score from "components/History/Score";
+import Score from 'components/History/Score';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,10 +31,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: scaleW(13),
     marginVertical: scaleH(5),
   },
-  image: {
+  imageContainer: {
     width: scaleH(85),
     height: scaleH(85),
     borderRadius: scaleH(10),
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   name: {
@@ -74,28 +80,44 @@ const styles = StyleSheet.create({
   },
 });
 
-const CartListItem = ({ data, onPress }) => {
+const CartListItem = ({
+  data,
+  onPress,
+  onRemoveFromCart,
+  onMinusCount,
+  onPlusCount,
+}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View>
-        <Image source={data.image} style={styles.image} />
+        <View style={styles.imageContainer}>
+          {data.data.image_url?.includes('.svg') ? (
+            <SvgUri uri={data.data.image_url} width="100%" height="100%" />
+          ) : (
+            <Image source={{ uri: data.data.image_url }} style={styles.image} />
+          )}
+        </View>
         <View style={styles.scoreContainer}>
-          <Score score={data.score} small={true} />
+          <Score score={data.data.score} small={true} />
         </View>
       </View>
       <View style={styles.content}>
         <View style={styles.nameContent}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.name}>{data.name}</Text>
-            <Text style={styles.category}>{data.category}</Text>
+            <Text style={styles.name}>{data.data.product_name}</Text>
+            <Text style={styles.category}>{data.data.brands}</Text>
           </View>
           <View style={{ marginLeft: scaleW(20) }}>
-            <TrashButton />
+            <TrashButton onPress={onRemoveFromCart} />
           </View>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
-          <Text style={styles.price}>$20.00</Text>
-          <AmountController value={1} />
+          <Text style={styles.price}>{`$${data.price}`}</Text>
+          <AmountController
+            value={data.count}
+            onMinus={onMinusCount}
+            onPlus={onPlusCount}
+          />
         </View>
       </View>
     </TouchableOpacity>

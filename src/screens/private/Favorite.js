@@ -77,12 +77,12 @@ const Favorite = ({ navigation }) => {
             <ProductSection
               key={index}
               product
+              navigation={navigation}
               products={Array.from(allProducts).filter((product) =>
                 Array.from(product.favorite).includes(item.id),
               )}
               productCategory={item}
               productAction="Buy Now"
-              productActionPress={() => navigation.navigate('Cart')}
               onRemoveFavorite={handleRemoveFavorite}
             />
           ))}
@@ -96,7 +96,7 @@ const Favorite = ({ navigation }) => {
       <FlatList
         contentContainerStyle={{ padding: scaleW(10) }}
         style={{ flex: 1 }}
-        data={data}
+        data={[]}
         renderItem={({ item }) => <CartListItem key={item.id} data={item} />}
       />
     );
