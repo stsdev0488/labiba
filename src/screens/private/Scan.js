@@ -219,9 +219,11 @@ const Scan = ({ navigation, route }) => {
   };
 
   const handlePay = async () => {
+    setProductLoading(true);
     const orderResponse = await orderApi.getOrder({ ...order });
     const fromDate = new Date(orderResponse.data.from);
     const toDate = new Date(orderResponse.data.to);
+    setProductLoading(false);
     Alert.alert(
       'Your Order',
       `Your order is from ${fromDate.toLocaleDateString()} to ${toDate.toLocaleDateString()}`,
