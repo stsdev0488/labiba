@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
+import Spinner from 'react-native-loading-spinner-overlay';
 import CartListItem from 'components/Cart/CartListItem';
 import CartHeader from 'components/Cart/CartHeader';
 import Container from 'components/Container';
@@ -19,6 +20,7 @@ const HeaderRight = ({ onPress }) => (
 const Cart = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleRemoveFromCart = (code) => {
     const removedData = data.filter((item) => item.data.code !== code);
@@ -58,6 +60,7 @@ const Cart = ({ navigation, route }) => {
   };
 
   const getData = async () => {
+    setLoading(true);
     const { items } = route.params;
     const { data } = await productApi.getProductPrices(
       items.map((item) => item.code),
@@ -69,6 +72,7 @@ const Cart = ({ navigation, route }) => {
         count: 1,
       })),
     );
+    setLoading(false);
   };
 
   const subTotal = useMemo(() => {
@@ -112,6 +116,7 @@ const Cart = ({ navigation, route }) => {
 
   return (
     <Container>
+      <Spinner visible={loading} />
       <Header
         navigation={navigation}
         title="My Cart"
