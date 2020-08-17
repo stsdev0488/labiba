@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import BottomPanel from 'react-native-bottomsheet-reanimated';
+import BottomPanel from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated'
+import { useDispatch, useSelector } from 'react-redux'
 import Spinner from 'react-native-loading-spinner-overlay';
 import {
   BarcodePicker,
@@ -20,8 +21,9 @@ import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import ProductItem from 'components/Product/ProductItem';
 import * as ProductService from 'services/productService';
-import { productApi } from 'services/apis';
+import { getProduct, getProductAlternatives } from 'services/apis/product';
 import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
+import { productApi } from 'services/apis';
 import ProductSection from 'components/Product/ProductSection';
 import CartSummaryModal from 'components/CartSummaryModal';
 import { FavoriteActions } from 'reduxs/actions';
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
   popupContainer: {
     paddingHorizontal: scaleW(15),
     height: Constants.deviceHeight,
+    backgroundColor: Colors.background
   },
   popupItemDetailContainer: {
     shadowOffset: {
@@ -71,6 +74,22 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.primary,
   },
+  header: {
+    backgroundColor: Colors.background,
+    paddingTop: 10,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  panelHeader: {
+    alignItems: 'center',
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
+  },
 });
 
 ScanditModule.setAppKey(SCANDIT_KEY);
@@ -81,22 +100,33 @@ scanSettings.setSymbologyEnabled(Barcode.Symbology.UPCA, true);
 scanSettings.codeDuplicateFilter = 3000;
 
 const Scan = ({ navigation }) => {
+
   const dispatch = useDispatch();
+
   const { favoriteList, create } = useSelector((state) => state.favoriteList);
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
+  const [productAlternatives, setProductAlternatives] = useState([]);
   const [favoriteCategoryVisible, setFavoriteCategoryVisible] = useState(false);
+  const [isProductLoading, setProductLoading] = useState(false);
+  const [isProductAlternativesLoading, setProductAlternativesLoading] = useState(false);
   const [cartSummaryVisible, setCartSummaryVisible] = useState(false);
   const [selectedFavoriteCategory, setSelectedFavoriteCategory] = useState([]);
   const [newFavoriteItem, setNewFavoriteItem] = useState('');
+
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
+  let fall = new Animated.Value(1)
 
+  /***** methods *****/
   const handleScan = async (session) => {
+    setProductLoading(true);
+    scanner.current.pauseScanning();
+
     const code = session.newlyRecognizedCodes[0].data;
     const products = await ProductService.findProduct(code);
-    console.log('local products ', products.length);
     if (!products.length) {
+      console.log('product not found locally')
       productApi
         .getProduct(code)
         .then((response) => {
@@ -116,12 +146,17 @@ const Scan = ({ navigation }) => {
           showMessage({
             type: 'danger',
             message: 'Get product info failed!',
-          });
+          })
+          scanner.current.resumeScanning();
+        })
+        .finally(() => {
+          setProductLoading(false);
         });
     } else {
-      console.log('local product ', products[0]);
+      console.log('product found locally',);
       setProduct(products[0]);
       bottomSheet.current.snapTo(1);
+      setProductLoading(false);
     }
   };
 
@@ -150,7 +185,8 @@ const Scan = ({ navigation }) => {
   };
 
   const handleAddFavorite = () => {
-    bottomSheet.current.snapTo(0);
+    console.log('handleAddFavorite')
+    //bottomSheet.current.snapTo(0);
     setFavoriteCategoryVisible(true);
   };
 
@@ -166,84 +202,126 @@ const Scan = ({ navigation }) => {
     dispatch(FavoriteActions.getFavoriteList());
   }, []);
 
+  const renderContent = () => {
+    const { nutriments = {} } = product || {};
+    const energy = nutriments['energy-kcal_serving'];
+    const sugar = nutriments['sugars_100g'];
+    const carbohydrates = nutriments['carbohydrates_100g'];
+    const fat = nutriments['fat_100g'];
+    return (
+      <View style={styles.popupContainer}>
+        <View style={styles.popupItemDetailContainer}>
+          <FoodListItem
+            data={{
+              id: 1,
+              name: product.product_name,
+              category: product.brands,
+              score: product.score,
+              amount: '350',
+              calory: '120',
+              time: '8 day ago',
+              image: product.image_url,
+              favorite: product.favorite,
+            }}
+            noHistory
+            handleAddFavorite={handleAddFavorite}
+          />
+          <View
+            style={{
+              borderColor: Colors.border,
+              borderBottomWidth: 1,
+              paddingVertical: 5,
+            }}
+          />
+          <View style={{ paddingRight: scaleW(10) }}>
+            <DetailItem
+              key="fatty"
+              category="Saturated Fat"
+              value={7}
+              steps={[0, 2, 4, 7, 10]}
+              statusCategory="fatty"
+              thumb={Images.FatIcon}
+            />
+            <DetailItem
+              key="sugar"
+              category="Sugar"
+              value={5}
+              steps={[0, 2, 4, 7, 10]}
+              statusCategory="sweet"
+              thumb={Images.SugarIcon}
+            />
+            <DetailItem
+              key="additive"
+              category="Additives"
+              value={2}
+              steps={[0, 2, 4, 7, 10]}
+              statusCategory="additive"
+              thumb={Images.AdditiveIcon}
+            />
+          </View>
+        </View>
+        <ProductSection
+          products={productAlternatives}
+          productCategory="Product Alternatives"
+          productAction="View all"
+        />
+      </View>
+    )
+  };
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle} />
+      </View>
+    </View>
+  )
+
+  const onOpenStart = () => {
+    console.log('onOpenStart')
+    scanner.current.pauseScanning();
+
+    if (product && product.code) {
+      console.log('lookinf for product alternatives');
+      setProductAlternativesLoading(true);
+      getProductAlternatives(product.code)
+        .then((response) => {
+          console.log('product alternatives response : ', response.data.products);
+          if (response.data.products) {
+            setProductAlternatives(response.data.products);
+          }
+        })
+        .catch(() => { })
+        .finally(() => {
+          setProductAlternativesLoading(false);
+        });
+    }
+  }
   return (
     <Container>
-      <Spinner visible={favoriteList.loading || false} />
+      <Spinner
+        textContent={'Loading...'}
+        visible={isProductLoading || favoriteList.loading || false}
+        textStyle={{ color: Colors.white }}
+      />
+      <BottomPanel
+        ref={bottomSheet}
+        initialPosition={0}
+        callbackNode={fall}
+        snapPoints={['0%', '30%', '90%']}
+
+        onOpenStart={onOpenStart}
+        onOpenEnd={() => console.log('onOpenEnd')}
+        onCloseStart={() => console.log('onCloseStart')}
+        onCloseEnd={() => scanner.current.resumeScanning()}
+        renderHeader={renderHeader}
+        renderContent={renderContent}
+
+      />
       <BarcodePicker
         ref={scanner}
         onScan={(session) => handleScan(session)}
         scanSettings={scanSettings}
         style={{ flex: 1 }}
-      />
-      <BottomPanel
-        ref={bottomSheet}
-        bottomSheerColor={Colors.background}
-        containerStyle={{ backgroundColor: Colors.background }}
-        initialPosition={0}
-        snapPoints={['0%', '33%', '100%']}
-        isBackDrop={true}
-        isBackDropDismissByPress={true}
-        isRoundBorderWithTipHeader={true}
-        headerStyle={{ paddingBottom: 0 }}
-        body={
-          <View style={styles.popupContainer}>
-            <View style={styles.popupItemDetailContainer}>
-              <FoodListItem
-                data={{
-                  id: 1,
-                  name: product.product_name,
-                  category: product.brands,
-                  score: product.score,
-                  amount: '350',
-                  calory: '120',
-                  time: '8 day ago',
-                  image: product.image_url,
-                  favorite: product.favorite,
-                }}
-                noHistory
-                handleAddFavorite={handleAddFavorite}
-              />
-              <View
-                style={{
-                  borderColor: Colors.border,
-                  borderBottomWidth: 1,
-                  paddingVertical: 5,
-                }}
-              />
-              <View style={{ paddingRight: scaleW(10) }}>
-                <DetailItem
-                  key="fatty"
-                  category="Saturated Fat"
-                  value={7}
-                  steps={[0, 2, 4, 7, 10]}
-                  statusCategory="fatty"
-                  thumb={Images.FatIcon}
-                />
-                <DetailItem
-                  key="sugar"
-                  category="Sugar"
-                  value={5}
-                  steps={[0, 2, 4, 7, 10]}
-                  statusCategory="sweet"
-                  thumb={Images.SugarIcon}
-                />
-                <DetailItem
-                  key="additive"
-                  category="Additives"
-                  value={2}
-                  steps={[0, 2, 4, 7, 10]}
-                  statusCategory="additive"
-                  thumb={Images.AdditiveIcon}
-                />
-              </View>
-            </View>
-            <ProductSection
-              products={alternatives}
-              productCategory="Product Alternatives"
-              productAction="View all"
-            />
-          </View>
-        }
       />
       <FavoriteCategoryModal
         visible={favoriteCategoryVisible}

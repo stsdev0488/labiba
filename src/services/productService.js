@@ -5,6 +5,7 @@ import {
   PRODUCT_SCHEMA,
   ProductSchema,
 } from 'config/dataSchema';
+import _ from 'lodash';
 
 export const saveProduct = (data) => {
   Realm.open({ schema: [ProductSchema, NutrimentSchema, NutrimentLevelSchema] })
@@ -42,6 +43,18 @@ export const findProduct = (code) => {
     });
 };
 
+export const findAllProducts = (code) => {
+  return Realm.open({
+    schema: [ProductSchema, NutrimentSchema, NutrimentLevelSchema],
+  })
+    .then((realm) => {
+      return _.values(realm.objects(PRODUCT_SCHEMA));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 export const addToFavoriteList = (code, favoriteList) => {
   Realm.open({
     schema: [ProductSchema, NutrimentSchema, NutrimentLevelSchema],
@@ -60,6 +73,7 @@ export const addToFavoriteList = (code, favoriteList) => {
       console.log(error);
     });
 };
+
 
 export const removeFromFavoriteList = (code, favoriteId) => {
   Realm.open({

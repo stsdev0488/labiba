@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { Colors } from 'config';
 
 const AnimatedIcon = ({ name, progress, size }) => {
-  console.log('progress ', progress);
   const isActive = new Value(1);
   useCode(
     () =>
