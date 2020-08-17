@@ -1,11 +1,17 @@
-import React, {useMemo, useRef, useState} from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useMemo, useRef, useState } from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { scaleH, scaleW } from 'utils/scale';
 import { Colors, Images, Styles } from 'config';
 import FormButton from 'components/Forms/FormButton';
-import FormInput from 'components/Forms/FormInput';
 
 const styles = StyleSheet.create({
   modal: {
@@ -52,9 +58,7 @@ const styles = StyleSheet.create({
     fontSize: scaleH(12),
     fontWeight: '500',
     color: Colors.primary,
-    paddingTop: scaleH(7),
-    paddingBottom: scaleH(3),
-    paddingHorizontal: scaleW(7),
+    paddingVertical: 0,
     borderRadius: 5,
     borderColor: Colors.primary,
     borderWidth: 2,
@@ -82,6 +86,8 @@ const CartSummaryModal = ({
   promotionalDiscount,
   shippingFee,
   coupon,
+  promoCode,
+  handlePromoCodeChange,
 }) => {
   const total = useMemo(() => {
     return subTotal - promotionalDiscount + shippingFee - coupon;
@@ -126,12 +132,19 @@ const CartSummaryModal = ({
           <View style={styles.row}>
             <Text style={styles.rowText}>Add Coupon</Text>
             <TouchableOpacity onPress={addCoupon}>
-              <Text style={styles.addCoupon}>ADD COUPON</Text>
+              <TextInput
+                value={promoCode}
+                style={styles.addCoupon}
+                placeholder="ADD COUPON"
+                placeholderTextColor={Colors.primary}
+                onChangeText={(text) => handlePromoCodeChange(text)}
+                onSubmitEditing={addCoupon}
+              />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.divider} />
-        <View style={{ ...styles.row, paddingVertical: scaleH(10) }}>
+        <View style={{ ...styles.row, paddingVertical: scaleH(8) }}>
           <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
             Est. Total
           </Text>

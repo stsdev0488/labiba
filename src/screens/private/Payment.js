@@ -36,6 +36,7 @@ const Payment = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [cartSummaryVisible, setCartSummaryVisible] = useState(false);
   const [coupon, setCoupon] = useState(0);
+  const [promoCode, setPromoCode] = useState('');
 
   const getAllCards = async () => {
     setLoading(true);
@@ -50,9 +51,12 @@ const Payment = ({ navigation }) => {
   };
 
   const handleAddCoupon = async () => {
-    const coupon = await couponApi.getCoupon('L2020');
+    const coupon = await couponApi.getCoupon(promoCode);
+    console.log(coupon);
     if (coupon.data.isValid) {
       setCoupon(coupon.data.discount);
+    } else {
+      setCoupon(0);
     }
   };
 
@@ -125,13 +129,15 @@ const Payment = ({ navigation }) => {
       <CartSummaryModal
         visible={cartSummaryVisible}
         subTotal={subTotal}
-        totalCount={totalCount}
+        totalCount={order.products.length}
         promotionalDiscount={promotionalDiscount}
         shippingFee={shippingFee}
         coupon={coupon}
         closeModal={() => setCartSummaryVisible(false)}
         addCoupon={handleAddCoupon}
         handlePay={handlePay}
+        promoCode={promoCode}
+        handlePromoCodeChange={setPromoCode}
       />
     </Container>
   );
