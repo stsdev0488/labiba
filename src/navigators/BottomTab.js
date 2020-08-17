@@ -68,6 +68,26 @@ const FavoriteNavigator = () => (
       component={Cart}
       options={{ headerShown: false }}
     />
+    <FavoriteStack.Screen
+      name="Address"
+      component={Address}
+      options={{ headerShown: false }}
+    />
+    <FavoriteStack.Screen
+      name="AddAddress"
+      component={AddAddress}
+      options={{ headerShown: false }}
+    />
+    <FavoriteStack.Screen
+      name="Payment"
+      component={Payment}
+      options={{ headerShown: false }}
+    />
+    <FavoriteStack.Screen
+      name="AddCard"
+      component={AddCard}
+      options={{ headerShown: false }}
+    />
   </FavoriteStack.Navigator>
 );
 
@@ -99,26 +119,6 @@ const SettingNavigator = () => (
     <SettingStack.Screen
       name="Setting"
       component={Setting}
-      options={{ headerShown: false }}
-    />
-    <SettingStack.Screen
-      name="Address"
-      component={Address}
-      options={{ headerShown: false }}
-    />
-    <SettingStack.Screen
-      name="AddAddress"
-      component={AddAddress}
-      options={{ headerShown: false }}
-    />
-    <SettingStack.Screen
-      name="Payment"
-      component={Payment}
-      options={{ headerShown: false }}
-    />
-    <SettingStack.Screen
-      name="AddCard"
-      component={AddCard}
       options={{ headerShown: false }}
     />
   </SettingStack.Navigator>

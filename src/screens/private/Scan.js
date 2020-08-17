@@ -23,9 +23,8 @@ import ProductItem from 'components/Product/ProductItem';
 import * as ProductService from 'services/localServices/productService';
 import { getProduct, getProductAlternatives } from 'services/apis/product';
 import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
-import { couponApi, orderApi, productApi } from 'services/apis';
+import { productApi } from 'services/apis';
 import ProductSection from 'components/Product/ProductSection';
-import CartSummaryModal from 'components/CartSummaryModal';
 import { FavoriteActions } from 'reduxs/actions';
 
 const alternatives = [];
@@ -103,13 +102,6 @@ const Scan = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const { favoriteList, create } = useSelector((state) => state.favoriteList);
-  const {
-    subTotal,
-    totalCount,
-    promotionalDiscount,
-    shippingFee,
-    order,
-  } = useSelector((state) => state.cart);
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
   const [productAlternatives, setProductAlternatives] = useState([]);
@@ -119,10 +111,8 @@ const Scan = ({ navigation, route }) => {
     isProductAlternativesLoading,
     setProductAlternativesLoading,
   ] = useState(false);
-  const [cartSummaryVisible, setCartSummaryVisible] = useState(false);
   const [selectedFavoriteCategory, setSelectedFavoriteCategory] = useState([]);
   const [newFavoriteItem, setNewFavoriteItem] = useState('');
-  const [coupon, setCoupon] = useState(0);
 
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
@@ -165,8 +155,16 @@ const Scan = ({ navigation, route }) => {
           setProductLoading(false);
         });
     } else {
-      console.log('product found locally');
+      console.log('product found locally, ', Array.from(products[0].favorite));
       setProduct(products[0]);
+      setSelectedFavoriteCategory(
+        Array.from(products[0].favorite).map((item) => {
+          const favoriteItem = favoriteList.data.find(
+            (favorite) => favorite.id === item,
+          );
+          return { ...favoriteItem };
+        }),
+      );
       bottomSheet.current.snapTo(1);
       setProductLoading(false);
     }
@@ -211,26 +209,6 @@ const Scan = ({ navigation, route }) => {
     setFavoriteCategoryVisible(true);
   };
 
-  const handleAddCoupon = async () => {
-    const coupon = await couponApi.getCoupon('L2020');
-    if (coupon.data.isValid) {
-      setCoupon(coupon.data.discount);
-    }
-  };
-
-  const handlePay = async () => {
-    setProductLoading(true);
-    const orderResponse = await orderApi.getOrder({ ...order });
-    const fromDate = new Date(orderResponse.data.from);
-    const toDate = new Date(orderResponse.data.to);
-    setProductLoading(false);
-    Alert.alert(
-      'Your Order',
-      `Your order is from ${fromDate.toLocaleDateString()} to ${toDate.toLocaleDateString()}`,
-      [{ text: 'OK', onPress: () => setCartSummaryVisible(false) }],
-    );
-  };
-
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -242,13 +220,6 @@ const Scan = ({ navigation, route }) => {
   useEffect(() => {
     dispatch(FavoriteActions.getFavoriteList());
   }, []);
-
-  useLayoutEffect(() => {
-    if (route.params) {
-      const { previewOrder } = route.params;
-      setCartSummaryVisible(previewOrder);
-    }
-  }, [route]);
 
   const renderContent = () => {
     const { nutriments = {} } = product || {};
@@ -329,7 +300,7 @@ const Scan = ({ navigation, route }) => {
     scanner.current.pauseScanning();
 
     if (product && product.code) {
-      console.log('lookinf for product alternatives');
+      console.log('looking for product alternatives');
       setProductAlternativesLoading(true);
       getProductAlternatives(product.code)
         .then((response) => {
@@ -383,17 +354,6 @@ const Scan = ({ navigation, route }) => {
         onCreateNewItem={handleCreateFavoriteItem}
         creatingNewItem={create.loading}
         onAddToList={handleAddToList}
-      />
-      <CartSummaryModal
-        visible={cartSummaryVisible}
-        subTotal={subTotal}
-        totalCount={totalCount}
-        promotionalDiscount={promotionalDiscount}
-        shippingFee={shippingFee}
-        coupon={coupon}
-        closeModal={() => setCartSummaryVisible(false)}
-        addCoupon={handleAddCoupon}
-        handlePay={handlePay}
       />
     </Container>
   );

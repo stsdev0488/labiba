@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CartListItem from 'components/Cart/CartListItem';
 import CartHeader from 'components/Cart/CartHeader';
@@ -102,13 +103,35 @@ const Cart = ({ navigation, route }) => {
 
   const totalCount = useMemo(() => {
     if (!data.length) {
-      return '0';
+      return 0;
     } else {
       let totalCount = 0;
       data.forEach((item) => (totalCount += item.count));
       return totalCount.toString();
     }
   }, [data]);
+
+  const handleCheckout = async () => {
+    if (totalCount) {
+      setLoading(true);
+      dispatch(CartActions.setSubtotal({ subTotal, totalCount }));
+      dispatch(
+        CartActions.setOrder({
+          products: data.map((item) => ({
+            code: item.data.code,
+            quantity: item.count,
+          })),
+        }),
+      );
+      setLoading(false);
+      navigation.navigate('Address');
+    } else {
+      showMessage({
+        type: 'danger',
+        message: 'No product!',
+      });
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -120,22 +143,7 @@ const Cart = ({ navigation, route }) => {
       <Header
         navigation={navigation}
         title="My Cart"
-        right={
-          <HeaderRight
-            onPress={() => {
-              dispatch(CartActions.setSubtotal({ subTotal, totalCount }));
-              dispatch(
-                CartActions.setOrder({
-                  products: data.map((item) => ({
-                    code: item.data.code,
-                    quantity: item.count,
-                  })),
-                }),
-              );
-              navigation.navigate('SettingTab', { screen: 'Address' });
-            }}
-          />
-        }
+        right={<HeaderRight onPress={handleCheckout} />}
       />
       <CartHeader
         averageScore={averageScore}

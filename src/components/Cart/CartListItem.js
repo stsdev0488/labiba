@@ -112,7 +112,9 @@ const CartListItem = ({
           </View>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
-          <Text style={styles.price}>{`$${data.price}`}</Text>
+          <Text style={styles.price}>{`$${(data.price * data.count).toFixed(
+            2,
+          )}`}</Text>
           <AmountController
             value={data.count}
             onMinus={onMinusCount}

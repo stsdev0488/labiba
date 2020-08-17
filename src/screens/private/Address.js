@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
 import Container from 'components/Container';
 import Header from 'components/Header/Header';
 import AddressHeader from 'components/Address/AddressHeader';
@@ -42,6 +43,18 @@ const Address = ({ navigation }) => {
     setLoading(false);
   };
 
+  const handleNext = async () => {
+    if (Object.keys(selectedAddress).length) {
+      dispatch(CartActions.setOrder({ shipping: { ...selectedAddress } }));
+      navigation.navigate('Payment');
+    } else {
+      showMessage({
+        type: 'danger',
+        message: 'No delivery address',
+      });
+    }
+  };
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -55,16 +68,7 @@ const Address = ({ navigation }) => {
       <Header
         title="Address"
         navigation={navigation}
-        right={
-          <HeaderRight
-            onPress={() => {
-              dispatch(
-                CartActions.setOrder({ shipping: { ...selectedAddress } }),
-              );
-              navigation.navigate('Payment');
-            }}
-          />
-        }
+        right={<HeaderRight onPress={handleNext} />}
       />
       <AddressHeader
         data={selectedAddress}
