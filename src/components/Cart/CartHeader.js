@@ -43,7 +43,9 @@ const CartHeader = ({ totalPrice, averageScore, itemCount }) => {
         <Text
           style={styles.totalPriceText}
         >{`Subtotal (${itemCount} items)`}</Text>
-        <Text style={styles.totalPriceText}>{totalPrice}</Text>
+        <Text style={styles.totalPriceText}>{`$${totalPrice
+          .toFixed(2)
+          .toString()}`}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.scoreText}>Cart Average Score</Text>

@@ -183,3 +183,34 @@ export const ProductSchema = {
     favorite: 'string?[]',
   },
 };
+
+export const DELIVERY_ADDRESS_SCHEMA = 'DeliveryAddresses';
+export const DeliveryAddressSchema = {
+  name: DELIVERY_ADDRESS_SCHEMA,
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    country: 'string',
+    firstName: 'string',
+    lastName: 'string',
+    addressLine1: 'string',
+    addressLine2: 'string?',
+    city: 'string',
+    state: 'string',
+    zip: 'string',
+  },
+};
+
+export const CARD_SCHEMA = 'Cards';
+export const CardSchema = {
+  name: CARD_SCHEMA,
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    number: 'string',
+    expiry: 'string',
+    cvc: 'string',
+    type: 'string',
+    cardholderName: 'string',
+  },
+};

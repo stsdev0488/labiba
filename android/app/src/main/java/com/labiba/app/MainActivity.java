@@ -1,4 +1,4 @@
-package com.labiba;
+package com.labiba.app;
 
 import com.facebook.react.ReactActivity;
 

@@ -1,4 +1,4 @@
-package com.labiba;
+package com.labiba.app;
 
 import android.app.Application;
 import android.content.Context;

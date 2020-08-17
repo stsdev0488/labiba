@@ -64,15 +64,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const PaymentCard = ({ data, selected, onPress }) => {
+const PaymentCard = ({ data, selected, onPress, onDelete }) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.container}>
-        <Text style={styles.cardNumber}>{data.cardNumber}</Text>
+        <Text style={styles.cardNumber}>{data.number}</Text>
         <Text style={styles.dateHeader}>Month / Year</Text>
-        <Text style={styles.date}>{data.date}</Text>
+        <Text style={styles.date}>{data.expiry}</Text>
         <View style={styles.cardNameContainer}>
-          <Text style={styles.cardName}>{data.cardName}</Text>
+          <Text style={styles.cardName}>{data.cardholderName}</Text>
           <Image
             source={
               data.type === 'visa'
@@ -87,7 +87,7 @@ const PaymentCard = ({ data, selected, onPress }) => {
           {selected ? (
             <Icon name="checkcircle" size={scaleH(20)} color={Colors.primary} />
           ) : (
-            <TrashButton />
+            <TrashButton onPress={onDelete} />
           )}
         </View>
       </View>

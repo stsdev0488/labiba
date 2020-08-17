@@ -74,7 +74,6 @@ export const addToFavoriteList = (code, favoriteList) => {
     });
 };
 
-
 export const removeFromFavoriteList = (code, favoriteId) => {
   Realm.open({
     schema: [ProductSchema, NutrimentSchema, NutrimentLevelSchema],

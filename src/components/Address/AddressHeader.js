@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { scaleH, scaleW } from 'utils/scale';
 import { Colors, Images } from 'config';
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddressHeader = ({ onAddAddress }) => {
+const AddressHeader = ({ data, onAddAddress }) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -70,7 +70,11 @@ const AddressHeader = ({ onAddAddress }) => {
             <Image source={Images.addressIcon} />
             <View style={styles.addressContainer}>
               <Text style={styles.addressHeader}>Home Address</Text>
-              <Text style={styles.address}>...Redmond, WA 98052</Text>
+              <Text style={styles.address}>
+                {Object.keys(data).length
+                  ? `${data?.addressLine1}, ${data?.city}, ${data?.zip}, ${data?.country}`
+                  : ''}
+              </Text>
             </View>
           </View>
         </View>

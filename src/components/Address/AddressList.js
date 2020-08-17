@@ -31,10 +31,10 @@ const AddressList = ({ options, selected, onItemPress }) => {
         data={options}
         renderItem={({ item, index }) => (
           <AddressItem
-            address={item.address}
-            state={item.state}
-            selected={item.id === selected}
-            onPress={() => onItemPress(item.id)}
+            address={item.addressLine1}
+            state={item.country}
+            selected={item.id === selected.id}
+            onPress={() => onItemPress(item)}
           />
         )}
         ItemSeparatorComponent={() => <Separator />}

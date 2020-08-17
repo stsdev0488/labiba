@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
 import BottomPanel from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated'
-import { useDispatch, useSelector } from 'react-redux'
+import Animated from 'react-native-reanimated';
+import { useDispatch, useSelector } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {
   BarcodePicker,
@@ -20,10 +20,10 @@ import DetailItem from 'components/Product/DetailItem';
 import { Colors, Constants, Images, SCANDIT_KEY } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import ProductItem from 'components/Product/ProductItem';
-import * as ProductService from 'services/productService';
+import * as ProductService from 'services/localServices/productService';
 import { getProduct, getProductAlternatives } from 'services/apis/product';
 import FavoriteCategoryModal from 'components/FavoriteCategoryModal';
-import { productApi } from 'services/apis';
+import { couponApi, orderApi, productApi } from 'services/apis';
 import ProductSection from 'components/Product/ProductSection';
 import CartSummaryModal from 'components/CartSummaryModal';
 import { FavoriteActions } from 'reduxs/actions';
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   popupContainer: {
     paddingHorizontal: scaleW(15),
     height: Constants.deviceHeight,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   popupItemDetailContainer: {
     shadowOffset: {
@@ -99,24 +99,34 @@ scanSettings.setSymbologyEnabled(Barcode.Symbology.EAN8, true);
 scanSettings.setSymbologyEnabled(Barcode.Symbology.UPCA, true);
 scanSettings.codeDuplicateFilter = 3000;
 
-const Scan = ({ navigation }) => {
-
+const Scan = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const { favoriteList, create } = useSelector((state) => state.favoriteList);
+  const {
+    subTotal,
+    totalCount,
+    promotionalDiscount,
+    shippingFee,
+    order,
+  } = useSelector((state) => state.cart);
   const [, setFocused] = useState();
   const [product, setProduct] = useState({});
   const [productAlternatives, setProductAlternatives] = useState([]);
   const [favoriteCategoryVisible, setFavoriteCategoryVisible] = useState(false);
   const [isProductLoading, setProductLoading] = useState(false);
-  const [isProductAlternativesLoading, setProductAlternativesLoading] = useState(false);
+  const [
+    isProductAlternativesLoading,
+    setProductAlternativesLoading,
+  ] = useState(false);
   const [cartSummaryVisible, setCartSummaryVisible] = useState(false);
   const [selectedFavoriteCategory, setSelectedFavoriteCategory] = useState([]);
   const [newFavoriteItem, setNewFavoriteItem] = useState('');
+  const [coupon, setCoupon] = useState(0);
 
   const scanner = useRef(null);
   const bottomSheet = useRef(null);
-  let fall = new Animated.Value(1)
+  let fall = new Animated.Value(1);
 
   /***** methods *****/
   const handleScan = async (session) => {
@@ -124,9 +134,10 @@ const Scan = ({ navigation }) => {
     scanner.current.pauseScanning();
 
     const code = session.newlyRecognizedCodes[0].data;
+    console.log('code ', code);
     const products = await ProductService.findProduct(code);
     if (!products.length) {
-      console.log('product not found locally')
+      console.log('product not found locally');
       productApi
         .getProduct(code)
         .then((response) => {
@@ -143,17 +154,18 @@ const Scan = ({ navigation }) => {
           }
         })
         .catch((error) => {
+          console.log('error ', error.response);
           showMessage({
             type: 'danger',
             message: 'Get product info failed!',
-          })
+          });
           scanner.current.resumeScanning();
         })
         .finally(() => {
           setProductLoading(false);
         });
     } else {
-      console.log('product found locally',);
+      console.log('product found locally');
       setProduct(products[0]);
       bottomSheet.current.snapTo(1);
       setProductLoading(false);
@@ -185,9 +197,27 @@ const Scan = ({ navigation }) => {
   };
 
   const handleAddFavorite = () => {
-    console.log('handleAddFavorite')
+    console.log('handleAddFavorite');
     //bottomSheet.current.snapTo(0);
     setFavoriteCategoryVisible(true);
+  };
+
+  const handleAddCoupon = async () => {
+    const coupon = await couponApi.getCoupon('L2020');
+    if (coupon.data.isValid) {
+      setCoupon(coupon.data.discount);
+    }
+  };
+
+  const handlePay = async () => {
+    const orderResponse = await orderApi.getOrder({ ...order });
+    const fromDate = new Date(orderResponse.data.from);
+    const toDate = new Date(orderResponse.data.to);
+    Alert.alert(
+      'Your Order',
+      `Your order is from ${fromDate.toLocaleDateString()} to ${toDate.toLocaleDateString()}`,
+      [{ text: 'OK', onPress: () => setCartSummaryVisible(false) }],
+    );
   };
 
   const isFocused = useIsFocused();
@@ -202,12 +232,19 @@ const Scan = ({ navigation }) => {
     dispatch(FavoriteActions.getFavoriteList());
   }, []);
 
+  useLayoutEffect(() => {
+    if (route.params) {
+      const { previewOrder } = route.params;
+      setCartSummaryVisible(previewOrder);
+    }
+  }, [route]);
+
   const renderContent = () => {
     const { nutriments = {} } = product || {};
     const energy = nutriments['energy-kcal_serving'];
-    const sugar = nutriments['sugars_100g'];
-    const carbohydrates = nutriments['carbohydrates_100g'];
-    const fat = nutriments['fat_100g'];
+    const sugar = nutriments.sugars_100g;
+    const carbohydrates = nutriments.carbohydrates_100g;
+    const fat = nutriments.fat_100g;
     return (
       <View style={styles.popupContainer}>
         <View style={styles.popupItemDetailContainer}>
@@ -266,7 +303,7 @@ const Scan = ({ navigation }) => {
           productAction="View all"
         />
       </View>
-    )
+    );
   };
   const renderHeader = () => (
     <View style={styles.header}>
@@ -274,10 +311,10 @@ const Scan = ({ navigation }) => {
         <View style={styles.panelHandle} />
       </View>
     </View>
-  )
+  );
 
   const onOpenStart = () => {
-    console.log('onOpenStart')
+    console.log('onOpenStart');
     scanner.current.pauseScanning();
 
     if (product && product.code) {
@@ -285,17 +322,20 @@ const Scan = ({ navigation }) => {
       setProductAlternativesLoading(true);
       getProductAlternatives(product.code)
         .then((response) => {
-          console.log('product alternatives response : ', response.data.products);
+          console.log(
+            'product alternatives response : ',
+            response.data.products,
+          );
           if (response.data.products) {
             setProductAlternatives(response.data.products);
           }
         })
-        .catch(() => { })
+        .catch(() => {})
         .finally(() => {
           setProductAlternativesLoading(false);
         });
     }
-  }
+  };
   return (
     <Container>
       <Spinner
@@ -308,14 +348,12 @@ const Scan = ({ navigation }) => {
         initialPosition={0}
         callbackNode={fall}
         snapPoints={['0%', '30%', '90%']}
-
         onOpenStart={onOpenStart}
         onOpenEnd={() => console.log('onOpenEnd')}
         onCloseStart={() => console.log('onCloseStart')}
         onCloseEnd={() => scanner.current.resumeScanning()}
         renderHeader={renderHeader}
         renderContent={renderContent}
-
       />
       <BarcodePicker
         ref={scanner}
@@ -337,7 +375,14 @@ const Scan = ({ navigation }) => {
       />
       <CartSummaryModal
         visible={cartSummaryVisible}
+        subTotal={subTotal}
+        totalCount={totalCount}
+        promotionalDiscount={promotionalDiscount}
+        shippingFee={shippingFee}
+        coupon={coupon}
         closeModal={() => setCartSummaryVisible(false)}
+        addCoupon={handleAddCoupon}
+        handlePay={handlePay}
       />
     </Container>
   );

@@ -1,34 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import Container from 'components/Container';
 import Header from 'components/Header/Header';
 import AddressHeader from 'components/Address/AddressHeader';
 import { Styles } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import AddressList from 'components/Address/AddressList';
-
-const addresses = [
-  {
-    id: 0,
-    address: 'Redmond, WA 98052',
-    state: 'United State',
-  },
-  {
-    id: 1,
-    address: 'Redmond, WA 98052',
-    state: 'United State',
-  },
-  {
-    id: 2,
-    address: 'Redmond, WA 98052',
-    state: 'United State',
-  },
-  {
-    id: 3,
-    address: 'Redmond, WA 98052',
-    state: 'United State',
-  },
-];
+import * as DeliveryAddressService from 'services/localServices/deliveryAddressService';
+import { useIsFocused } from '@react-navigation/native';
+import { CartActions } from 'reduxs/actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,24 +30,57 @@ const HeaderRight = ({ onPress }) => (
 );
 
 const Address = ({ navigation }) => {
-  const [selectedAddress, setSelectedAddress] = useState(0);
+  const dispatch = useDispatch();
+  const [selectedAddress, setSelectedAddress] = useState({});
+  const [allDeliveryAddresses, setAllDeliveryAddresses] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getAllAddresses = async () => {
+    setLoading(true);
+    const deliveryAddresses = await DeliveryAddressService.getAllDeliveryAddresses();
+    setAllDeliveryAddresses(Array.from(deliveryAddresses));
+    setLoading(false);
+  };
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllAddresses();
+    }
+  }, [isFocused]);
+
   return (
     <Container>
       <Header
         title="Address"
         navigation={navigation}
-        right={<HeaderRight onPress={() => navigation.navigate('Payment')} />}
+        right={
+          <HeaderRight
+            onPress={() => {
+              dispatch(
+                CartActions.setOrder({ shipping: { ...selectedAddress } }),
+              );
+              navigation.navigate('Payment');
+            }}
+          />
+        }
       />
-      <AddressHeader onAddAddress={() => navigation.navigate('AddAddress')} />
+      <AddressHeader
+        data={selectedAddress}
+        onAddAddress={() => navigation.navigate('AddAddress')}
+      />
       <View style={styles.container}>
         <Text style={styles.addressListHeader}>All Delivery Addresses</Text>
-        <View style={{ marginTop: scaleH(15) }}>
-          <AddressList
-            options={addresses}
-            selected={selectedAddress}
-            onItemPress={setSelectedAddress}
-          />
-        </View>
+        {allDeliveryAddresses.length ? (
+          <View style={{ marginTop: scaleH(15) }}>
+            <AddressList
+              options={allDeliveryAddresses}
+              selected={selectedAddress}
+              onItemPress={setSelectedAddress}
+            />
+          </View>
+        ) : null}
       </View>
     </Container>
   );

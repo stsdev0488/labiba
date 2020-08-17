@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
     fontSize: scaleH(12),
     fontWeight: '500',
     color: Colors.primary,
-    paddingVertical: scaleH(5),
+    paddingTop: scaleH(7),
+    paddingBottom: scaleH(3),
     paddingHorizontal: scaleW(7),
     borderRadius: 5,
     borderColor: Colors.primary,
@@ -71,7 +72,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const CartSummaryModal = ({ visible, closeModal }) => {
+const CartSummaryModal = ({
+  visible,
+  closeModal,
+  addCoupon,
+  handlePay,
+  subTotal,
+  totalCount,
+  promotionalDiscount,
+  shippingFee,
+  coupon,
+}) => {
+  const total = useMemo(() => {
+    return subTotal - promotionalDiscount + shippingFee - coupon;
+  }, [subTotal, promotionalDiscount, shippingFee, coupon]);
   return (
     <Modal
       isVisible={visible}
@@ -92,26 +106,26 @@ const CartSummaryModal = ({ visible, closeModal }) => {
         <View style={{ paddingVertical: scaleH(5) }}>
           <View style={styles.row}>
             <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
-              Subtotal (5items)
+              {`Subtotal (${totalCount}items)`}
             </Text>
             <Text style={{ ...styles.rowText, color: '#2A2A33' }}>
-              Rs. 1, 567.00
+              {`Rs. ${subTotal.toFixed(2).toString()}`}
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.rowText}>Promotion discounts</Text>
-            <Text style={styles.rowText}>Rs. -321.00</Text>
+            <Text style={styles.rowText}>{`Rs. ${promotionalDiscount}`}</Text>
           </View>
         </View>
         <View style={styles.divider} />
         <View style={{ paddingVertical: scaleH(5) }}>
           <View style={styles.row}>
             <Text style={styles.rowText}>Delivery charge(Home delivery)</Text>
-            <Text style={styles.rowText}>Rs. -321.00</Text>
+            <Text style={styles.rowText}>{`Rs. ${shippingFee}`}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.rowText}>Add Coupon</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={addCoupon}>
               <Text style={styles.addCoupon}>ADD COUPON</Text>
             </TouchableOpacity>
           </View>
@@ -128,7 +142,7 @@ const CartSummaryModal = ({ visible, closeModal }) => {
               fontSize: scaleH(20),
             }}
           >
-            Rs. 1956.00
+            {`Rs. ${total.toFixed(2).toString()}`}
           </Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
@@ -154,7 +168,7 @@ const CartSummaryModal = ({ visible, closeModal }) => {
                 shadowColor: '#29C17E',
               }}
               titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
-              onPress={closeModal}
+              onPress={handlePay}
               title="Pay Now"
             />
           </View>

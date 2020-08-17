@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.labiba"
+        applicationId "com.labiba.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

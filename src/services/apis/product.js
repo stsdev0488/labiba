@@ -6,5 +6,5 @@ export const getProduct = (code) =>
 export const getProductAlternatives = (code) =>
   apiHandler('get', `/products/${code}/alternatives`, false);
 
-  export const getProductPrices = (products) =>
+export const getProductPrices = (products) =>
   apiHandler('post', '/products/prices', false, { products });

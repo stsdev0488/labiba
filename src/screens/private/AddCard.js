@@ -1,15 +1,17 @@
 import React, { Fragment } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import Container from 'components/Container';
-import { Colors, Images, Styles } from 'config';
-import Header from 'components/Header/Header';
-import DismissKeyboard from 'components/DismissKeyboard';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
-import { scaleH, scaleW } from 'utils/scale';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import uuid from 'uuid-random';
+import Container from 'components/Container';
+import Header from 'components/Header/Header';
+import DismissKeyboard from 'components/DismissKeyboard';
 import FormInput from 'components/Forms/FormInput';
 import FormButton from 'components/Forms/FormButton';
+import { Colors, Images, Styles } from 'config';
+import * as CardService from 'services/localServices/cardService';
+import { scaleH, scaleW } from 'utils/scale';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +21,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: scaleW(20),
     paddingTop: scaleH(20),
+    paddingBottom: scaleH(100),
   },
   cardImageContainer: {
     alignItems: 'center',
@@ -34,6 +37,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.33,
     shadowRadius: 8,
     shadowColor: '#29C17E',
+    borderWidth: 0,
   },
   saveButtonContainer: {
     marginTop: scaleH(30),
@@ -89,6 +93,18 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddCard = ({ navigation }) => {
+  const handleAddCard = async (values) => {
+    await CardService.saveCard({
+      id: uuid(),
+      number: `${values.numberField1} ${values.numberField2} ${values.numberField3} ${values.numberField4}`,
+      expiry: values.expirationDate,
+      cvc: values.cvv_cvc,
+      type: 'mastercard',
+      cardholderName: values.cardholderName,
+    });
+    navigation.goBack();
+  };
+
   return (
     <Container style={styles.container}>
       <Header title="Add Card" navigation={navigation} />
@@ -106,7 +122,7 @@ const AddCard = ({ navigation }) => {
                 cvv_cvc: '',
               }}
               onSubmit={(values) => {
-                // handleRegister(values);
+                handleAddCard(values);
               }}
               validationSchema={validationSchema}
             >
@@ -252,7 +268,6 @@ const AddCard = ({ navigation }) => {
                       color: Colors.formText,
                     }}
                     name="expirationDate"
-                    keyboardType="number-pad"
                     value={values.expirationDate}
                     onChangeText={handleChange('expirationDate')}
                     onBlur={handleBlur('expirationDate')}
@@ -294,8 +309,9 @@ const AddCard = ({ navigation }) => {
                         ...styles.formButton,
                       }}
                       titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
-                      // onPress={closeModal}
+                      onPress={handleSubmit}
                       title="Save My Card"
+                      disabled={!isValid}
                     />
                   </View>
                 </Fragment>

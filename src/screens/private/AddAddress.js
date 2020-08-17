@@ -3,12 +3,14 @@ import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import { Formik } from 'formik';
+import uuid from 'uuid-random';
 import Container from 'components/Container';
 import Header from 'components/Header/Header';
 import DismissKeyboard from 'components/DismissKeyboard';
 import FormInput from 'components/Forms/FormInput';
 import FormButton from 'components/Forms/FormButton';
 import { Colors, Styles } from 'config';
+import * as DeliveryAddressService from 'services/localServices/deliveryAddressService';
 import { scaleH, scaleW } from 'utils/scale';
 
 const validationSchema = Yup.object().shape({
@@ -34,6 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: scaleW(20),
     paddingTop: scaleH(20),
+    paddingBottom: scaleH(100),
   },
   formButton: {
     height: scaleH(45),
@@ -41,6 +44,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.33,
     shadowRadius: 8,
     shadowColor: '#29C17E',
+    borderWidth: 0,
   },
   saveButtonContainer: {
     marginTop: scaleH(30),
@@ -49,7 +53,13 @@ const styles = StyleSheet.create({
 });
 
 const AddAddress = ({ navigation }) => {
-  const handleRegister = () => {};
+  const handleAddDeliveryAddress = async (values) => {
+    await DeliveryAddressService.saveDeliveryAddress({
+      ...values,
+      id: uuid(),
+    });
+    navigation.goBack();
+  };
 
   return (
     <Container style={styles.container}>
@@ -69,7 +79,7 @@ const AddAddress = ({ navigation }) => {
                 zip: '',
               }}
               onSubmit={(values) => {
-                handleRegister(values);
+                handleAddDeliveryAddress(values);
               }}
               validationSchema={validationSchema}
             >
@@ -246,8 +256,9 @@ const AddAddress = ({ navigation }) => {
                         ...styles.formButton,
                       }}
                       titleStyle={{ fontSize: scaleH(15), fontWeight: '800' }}
-                      // onPress={closeModal}
+                      onPress={handleSubmit}
                       title="Save My Address"
+                      disabled={!isValid}
                     />
                   </View>
                 </Fragment>

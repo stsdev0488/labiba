@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
 import CartListItem from 'components/Cart/CartListItem';
 import CartHeader from 'components/Cart/CartHeader';
 import Container from 'components/Container';
@@ -7,6 +8,7 @@ import Header from 'components/Header/Header';
 import { Images, Styles } from 'config';
 import { scaleH, scaleW } from 'utils/scale';
 import { productApi } from 'services/apis';
+import { CartActions } from 'reduxs/actions';
 
 const HeaderRight = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
@@ -15,6 +17,7 @@ const HeaderRight = ({ onPress }) => (
 );
 
 const Cart = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
 
   const handleRemoveFromCart = (code) => {
@@ -70,11 +73,11 @@ const Cart = ({ navigation, route }) => {
 
   const subTotal = useMemo(() => {
     if (!data.length) {
-      return '0';
+      return 0;
     } else {
       let total = 0;
       data.forEach((item) => (total += item.count * item.price));
-      return `$${total.toFixed(2).toString()}`;
+      return total;
     }
   }, [data]);
 
@@ -114,9 +117,18 @@ const Cart = ({ navigation, route }) => {
         title="My Cart"
         right={
           <HeaderRight
-            onPress={() =>
-              navigation.navigate('SettingTab', { screen: 'Address' })
-            }
+            onPress={() => {
+              dispatch(CartActions.setSubtotal({ subTotal, totalCount }));
+              dispatch(
+                CartActions.setOrder({
+                  products: data.map((item) => ({
+                    code: item.data.code,
+                    quantity: item.count,
+                  })),
+                }),
+              );
+              navigation.navigate('SettingTab', { screen: 'Address' });
+            }}
           />
         }
       />

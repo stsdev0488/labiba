@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowColor: Colors.shadow,
     shadowOpacity: 0.2,
-    elevation: 4
+    elevation: 4,
   },
   row: {
     flexDirection: 'row',
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const PaymentHeader = ({ onAddPayment }) => {
+const PaymentHeader = ({ data, onAddPayment }) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -69,8 +69,12 @@ const PaymentHeader = ({ onAddPayment }) => {
           <View style={{ flexDirection: 'row' }}>
             <Image source={Images.creditCardIcon} />
             <View style={styles.addressContainer}>
-              <Text style={styles.addressHeader}>************1234</Text>
-              <Text style={styles.address}>Name Card Visa Debit Card</Text>
+              <Text style={styles.addressHeader}>
+                {Object.keys(data).length ? data?.number : ''}
+              </Text>
+              <Text style={styles.address}>
+                {Object.keys(data).length ? `Name ${data.type}` : ''}
+              </Text>
             </View>
           </View>
         </View>

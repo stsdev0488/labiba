@@ -13,7 +13,7 @@ import Container from 'components/Container';
 import Header from 'components/Header/Header';
 import ProductSection from 'components/Product/ProductSection';
 import { Colors, Images } from 'config';
-import * as ProductService from 'services/productService';
+import * as ProductService from 'services/localServices/productService';
 import { scaleH, scaleW } from 'utils/scale';
 import { useIsFocused } from '@react-navigation/native';
 

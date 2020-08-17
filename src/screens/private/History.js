@@ -48,7 +48,7 @@ const data = [
     image: Images.Food4,
   },
 ];
-import * as ProductService from 'services/productService';
+import * as ProductService from 'services/localServices/productService';
 
 export default class History extends React.Component {
 
